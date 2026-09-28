@@ -41,8 +41,9 @@ export default function AccountAdmin() {
     }
 
     return (
-        <form onSubmit={submit} style={{ margin: '1rem 0', display: 'grid', gap: '0.5rem', maxWidth: '360px' }}>
+        <form onSubmit={submit} style={{ margin: '1rem auto', display: 'grid', gap: '0.5rem', maxWidth: '360px' }}>
             <h3>Akun admin</h3>
+            <p style={{ margin: 0 }}>{email ? `Masuk sebagai ${email}` : 'Memuat akun...'}</p>
             <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
             <input type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Password saat ini" required />
             <input type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} placeholder="Password baru, kosongkan jika tidak diganti" />

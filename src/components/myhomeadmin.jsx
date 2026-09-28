@@ -10,13 +10,13 @@ import AccountAdmin from './AccountAdmin.jsx';
 import styles from './myhomeadmin.module.css';
 
 const MyHomeAdmin = () => {
-    const [showTaglines, setShowTaglines] = useState(false);
-    const [showToservices, setShowToservices] = useState(false);
-    const [showOurclients, setShowOurclients] = useState(false);
-    const [showToworks, setShowToworks] = useState(false);
-    const [showTestimonials, setShowTestimonials] = useState(false);
-    const [showConnect, setShowConnect] = useState(false);
-    const [showInstagrams, setShowInstagrams] = useState(false);
+    const [showTaglines, setShowTaglines] = useState(true);
+    const [showToservices, setShowToservices] = useState(true);
+    const [showOurclients, setShowOurclients] = useState(true);
+    const [showToworks, setShowToworks] = useState(true);
+    const [showTestimonials, setShowTestimonials] = useState(true);
+    const [showConnect, setShowConnect] = useState(true);
+    const [showInstagrams, setShowInstagrams] = useState(true);
     const [showWorkPage, setShowWorkPage] = useState(false);
 
     const navigateTo = (path) => {
