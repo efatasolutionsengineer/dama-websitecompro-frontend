@@ -371,7 +371,7 @@ const WorksAdmin = () => {
             <button onClick={handleUpload} className={styles.uploadButton}>Add Work</button>
 
             {showAddForm && showForm && !editItemId && (
-                <form className={styles.workForm}>
+                <form className={styles.workForm} onSubmit={(e) => e.preventDefault()}>
                     <label htmlFor="workTitle">Title:</label>
                     <input
                         type="text"
@@ -494,10 +494,10 @@ const WorksAdmin = () => {
                         <button type="button" onClick={handleAddWorkImageInput} className={styles.addButton}>Add Work Image</button>
                     </div>
 
-                    <button onClick={addWork} disabled={loading} className={styles.actionButton}>
+                    <button type="button" onClick={addWork} disabled={loading} className={styles.actionButton}>
                         {loading ? "Adding..." : "Add Work"}
                     </button>
-                    <button onClick={() => { setShowForm(false); setShowAddForm(false); }} className={styles.cancelButton}>Cancel</button>
+                    <button type="button" onClick={() => { setShowForm(false); setShowAddForm(false); }} className={styles.cancelButton}>Cancel</button>
                 </form>
             )}
 
@@ -525,7 +525,7 @@ const WorksAdmin = () => {
                             <button onClick={() => deleteWork(work.id)} disabled={loading} className={styles.deleteButton}>Delete</button>
                         </div>
                         {editItemId === work.id && showForm && (
-                            <form className={styles.workForm}>
+                            <form className={styles.workForm} onSubmit={(e) => e.preventDefault()}>
                                 <label htmlFor="workTitle">Title:</label>
                                 <input
                                     type="text"
@@ -648,10 +648,10 @@ const WorksAdmin = () => {
                                     <button type="button" onClick={handleAddWorkImageInput} className={styles.addButton}>Add Work Image</button>
                                 </div>
 
-                                <button onClick={updateWork} disabled={loading} className={styles.actionButton}>
+                                <button type="button" onClick={updateWork} disabled={loading} className={styles.actionButton}>
                                     {loading ? "Updating..." : "Update Work"}
                                 </button>
-                                <button onClick={() => { setShowForm(false); setEditIndex(null); setEditItemId(null);}} className={styles.cancelButton}>Cancel</button>
+                                <button type="button" onClick={() => { setShowForm(false); setEditIndex(null); setEditItemId(null);}} className={styles.cancelButton}>Cancel</button>
                             </form>
                         )}
                     </div>

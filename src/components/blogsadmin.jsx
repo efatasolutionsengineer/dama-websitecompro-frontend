@@ -72,6 +72,8 @@ const BlogsAdmin = () => {
                             formData.append("image_list", file);
                         }
                     });
+                } else if (key === "published_at" && !newBlog.published_at) {
+                    return;
                 } else if (newBlog[key] !== null && newBlog[key] !== undefined) {
                     formData.append(key, newBlog[key]);
                 } else {
@@ -114,6 +116,8 @@ const BlogsAdmin = () => {
                             formData.append("image_list_url", item);
                         }
                     });
+                } else if (key === "published_at" && !newBlog.published_at) {
+                    return;
                 } else if (newBlog[key] !== null && newBlog[key] !== undefined) {
                     formData.append(key, newBlog[key]);
                 } else {
@@ -274,7 +278,7 @@ const BlogsAdmin = () => {
             <input type="text" placeholder="Search Blogs" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={styles.searchInput} />
             <button onClick={handleUpload} className={styles.uploadButton}>Add Blog</button>
             {showForm && editItemId === null && (
-                <form className={styles.workForm}>
+                <form className={styles.workForm} onSubmit={(e) => e.preventDefault()}>
                     <label htmlFor="title">Title:</label>
                     <input type="text" id="title" placeholder="Title" value={newBlog.title} onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })} className={styles.inputField} />
                     <label htmlFor="slug">Slug:</label>
@@ -328,10 +332,10 @@ const BlogsAdmin = () => {
                         ))}
                         <button type="button" onClick={handleAddImageInput} className={styles.addButton}>Add Image</button>
                     </div>
-                    <button onClick={selectedBlog ? updateBlog : addBlog} disabled={loading} className={styles.actionButton}>
+                    <button type="button" onClick={selectedBlog ? updateBlog : addBlog} disabled={loading} className={styles.actionButton}>
                         {loading ? (selectedBlog ? "Updating..." : "Adding...") : selectedBlog ? "Update Blog" : "Add Blog"}
                     </button>
-                    <button onClick={() => { setShowForm(false); setEditIndex(null); setEditItemId(null); }} className={styles.cancelButton}>Cancel</button>
+                    <button type="button" onClick={() => { setShowForm(false); setEditIndex(null); setEditItemId(null); }} className={styles.cancelButton}>Cancel</button>
                 </form>
             )}
             <div className={styles.workList}>
@@ -346,7 +350,7 @@ const BlogsAdmin = () => {
                             <button onClick={() => deleteBlog(blog.id)} disabled={loading} className={styles.deleteButton}>Delete</button>
                         </div>
                         {editItemId === blog.id && showForm && (
-                            <form className={styles.workForm}>
+                            <form className={styles.workForm} onSubmit={(e) => e.preventDefault()}>
                                 <label htmlFor="title">Title:</label>
                                 <input type="text" id="title" placeholder="Title" value={newBlog.title} onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })} className={styles.inputField} />
                                 <label htmlFor="slug">Slug:</label>
@@ -401,10 +405,10 @@ const BlogsAdmin = () => {
                                     <button type="button" onClick={handleAddImageInput} className={styles.addButton}>Add Image</button>
                                 </div>
 
-                                <button onClick={selectedBlog ? updateBlog : addBlog} disabled={loading} className={styles.actionButton}>
+                                <button type="button" onClick={selectedBlog ? updateBlog : addBlog} disabled={loading} className={styles.actionButton}>
                                     {loading ? (selectedBlog ? "Updating..." : "Adding...") : selectedBlog ? "Update Blog" : "Add Blog"}
                                 </button>
-                                <button onClick={() => { setShowForm(false); setEditIndex(null); setEditItemId(null); }} className={styles.cancelButton}>Cancel</button>
+                                <button type="button" onClick={() => { setShowForm(false); setEditIndex(null); setEditItemId(null); }} className={styles.cancelButton}>Cancel</button>
                             </form>
 
                         )}
