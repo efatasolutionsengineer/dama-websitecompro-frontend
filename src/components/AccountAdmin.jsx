@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE } from '../lib/apiBase.js';
+import styles from './auth.module.css';
 
 export default function AccountAdmin() {
     const [email, setEmail] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [editing, setEditing] = useState(false);
 
     useEffect(() => {
         fetch(`${API_BASE}/auth/me`, { credentials: 'include' })
@@ -32,6 +34,7 @@ export default function AccountAdmin() {
         }
         setCurrentPassword('');
         setNewPassword('');
+        setEditing(false);
         setMessage('Email dan password tersimpan');
     }
 
@@ -41,15 +44,37 @@ export default function AccountAdmin() {
     }
 
     return (
-        <form onSubmit={submit} style={{ margin: '1rem auto', display: 'grid', gap: '0.5rem', maxWidth: '360px' }}>
-            <h3>Akun admin</h3>
-            <p style={{ margin: 0 }}>{email ? `Masuk sebagai ${email}` : 'Memuat akun...'}</p>
-            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-            <input type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Password saat ini" required />
-            <input type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} placeholder="Password baru, kosongkan jika tidak diganti" />
-            <button type="submit">Simpan akun</button>
-            <button type="button" onClick={logout}>Keluar</button>
-            {message ? <p>{message}</p> : null}
+        <form className={styles.session} onSubmit={submit}>
+            <div className={styles.sessionTop}>
+                <p className={styles.who}>
+                    Akun admin
+                    <strong>{email || 'Memuat akun...'}</strong>
+                </p>
+                <div className={styles.actions}>
+                    <button className={styles.ghost} type="button" onClick={() => { setEditing((open) => !open); setMessage(''); }}>
+                        {editing ? 'Tutup' : 'Ubah akun'}
+                    </button>
+                    <button className={styles.ghost} type="button" onClick={logout}>Keluar</button>
+                </div>
+            </div>
+            {editing ? (
+                <div className={styles.editor}>
+                    <label className={`${styles.field} ${styles.wide}`}>
+                        <span>Email</span>
+                        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="username" />
+                    </label>
+                    <label className={styles.field}>
+                        <span>Password saat ini</span>
+                        <input type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} required autoComplete="current-password" />
+                    </label>
+                    <label className={styles.field}>
+                        <span>Password baru</span>
+                        <input type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} placeholder="Kosongkan jika tidak diganti" autoComplete="new-password" />
+                    </label>
+                    <button className={styles.primary} type="submit">Simpan akun</button>
+                </div>
+            ) : null}
+            {message ? <p className={message.includes('tersimpan') ? styles.success : styles.error}>{message}</p> : null}
         </form>
     );
 }

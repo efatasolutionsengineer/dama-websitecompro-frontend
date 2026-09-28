@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { API_BASE } from '../lib/apiBase.js';
+import styles from './auth.module.css';
 
 export default function AdminLogin() {
     const [email, setEmail] = useState('');
@@ -23,18 +24,22 @@ export default function AdminLogin() {
     }
 
     return (
-        <form onSubmit={submit} style={{ maxWidth: '360px', margin: '4rem auto', display: 'grid', gap: '0.75rem' }}>
-            <h1>Admin login</h1>
-            <label>
-                Email
-                <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required style={{ width: '100%' }} />
-            </label>
-            <label>
-                Password
-                <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required style={{ width: '100%' }} />
-            </label>
-            <button type="submit">Masuk</button>
-            {message ? <p>{message}</p> : null}
-        </form>
+        <div className={styles.loginShell}>
+            <form className={styles.card} onSubmit={submit}>
+                <p className={styles.eyebrow}>Dama Studio</p>
+                <h1 className={styles.title}>Masuk admin</h1>
+                <p className={styles.lede}>Gunakan akun admin untuk mengubah isi situs.</p>
+                <label className={styles.field}>
+                    <span>Email</span>
+                    <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="username" />
+                </label>
+                <label className={styles.field}>
+                    <span>Password</span>
+                    <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required autoComplete="current-password" />
+                </label>
+                <button className={styles.primary} type="submit">Masuk</button>
+                {message ? <p className={styles.error}>{message}</p> : null}
+            </form>
+        </div>
     );
 }
