@@ -1,4 +1,5 @@
 import { API_BASE } from '../../lib/apiBase.js';
+import { asList } from '../../lib/asList.js';
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./specialdisplay.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,8 +26,12 @@ const IndividualDisplay = () => {
                 const response = await fetch(`${API_BASE}/services_individual`);
                 if (response.ok) {
                     const data = await response.json();
-                    // Urutkan data berdasarkan field 'order'
-                    const sortedData = data.sort((a, b) => a.order - b.order);
+                    const sortedData = data
+                        .map((row) => ({
+                            ...row,
+                            services_individual_include: asList(row.services_individual_include),
+                        }))
+                        .sort((a, b) => a.order - b.order);
                     setServicesIndividualData(sortedData);
                 } else {
                     throw new Error("Failed to fetch services data.");

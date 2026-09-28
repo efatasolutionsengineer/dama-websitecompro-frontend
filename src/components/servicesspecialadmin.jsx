@@ -1,4 +1,5 @@
 import { API_BASE } from '../lib/apiBase.js';
+import { asList } from '../lib/asList.js';
 import React, { useState, useEffect } from "react";
 import styles from "./servicesadmin.module.css";
 
@@ -28,7 +29,10 @@ const ServicesSpecialAdmin = () => {
                 const response = await fetch(`${API_BASE}/services_special`);
                 if (response.ok) {
                     const data = await response.json();
-                    setServicesSpecialData(data);
+                    setServicesSpecialData(data.map((row) => ({
+                        ...row,
+                        services_special_include: asList(row.services_special_include),
+                    })));
                 } else {
                     console.error("Fetch error:", response.status, response.statusText);
                     setMessage("Failed to fetch Services Special data.");

@@ -1,4 +1,5 @@
 import { API_BASE } from '../../lib/apiBase.js';
+import { asList } from '../../lib/asList.js';
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./specialdisplay.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,7 +26,10 @@ const SpecialDisplay = () => {
                 const response = await fetch(`${API_BASE}/services_special`);
                 if (response.ok) {
                     const data = await response.json();
-                    setServicesSpecialData(data);
+                    setServicesSpecialData(data.map((row) => ({
+                        ...row,
+                        services_special_include: asList(row.services_special_include),
+                    })));
                 } else {
                     throw new Error("Failed to fetch services data.");
                 }
