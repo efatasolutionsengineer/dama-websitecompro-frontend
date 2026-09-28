@@ -6,6 +6,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
+ARG PUBLIC_API_URL=http://208.87.132.238:8160
+ENV PUBLIC_API_URL=$PUBLIC_API_URL
 RUN npm run build
 
 FROM nginx:1.27-alpine

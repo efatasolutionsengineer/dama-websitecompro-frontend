@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./visionmissiondisplay.module.css";
 
@@ -12,9 +13,9 @@ const VisionMissionDisplay = () => {
         const fetchVisionMissionData = async () => {
             setLoading(true);
             try {
-                const visionMissionResponse = await fetch("https://dama-backend.vercel.app/visionmission");
-                const visionResponse = await fetch("https://dama-backend.vercel.app/visions");
-                const missionResponse = await fetch("https://dama-backend.vercel.app/missions");
+                const visionMissionResponse = await fetch(`${API_BASE}/visionmission`);
+                const visionResponse = await fetch(`${API_BASE}/visions`);
+                const missionResponse = await fetch(`${API_BASE}/missions`);
 
                 if (!visionMissionResponse.ok || !visionResponse.ok || !missionResponse.ok) {
                     throw new Error("Failed to fetch vision, mission, or vision/mission image data.");

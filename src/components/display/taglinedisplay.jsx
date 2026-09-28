@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./taglinedisplay.module.css";
 
@@ -14,7 +15,7 @@ const TaglineDisplay = () => {
         const fetchTaglines = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/taglines");
+                const response = await fetch(`${API_BASE}/taglines`);
                 if (response.ok) {
                     const data = await response.json();
                     setTaglines(data);

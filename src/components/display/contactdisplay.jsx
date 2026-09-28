@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./contactdisplay.module.css";
 
@@ -11,7 +12,7 @@ const ContactDisplay = () => {
         const fetchContactData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/contacts");
+                const response = await fetch(`${API_BASE}/contacts`);
                 if (response.ok) {
                     const data = await response.json();
                     setContactData(data[0]);
@@ -26,7 +27,7 @@ const ContactDisplay = () => {
 
         const fetchWhatsappNumber = async () => {
             try {
-                const response = await fetch("https://dama-backend.vercel.app/dama");
+                const response = await fetch(`${API_BASE}/dama`);
                 if (response.ok) {
                     const data = await response.json();
                     setWhatsappNumber(data[0].dama_whatsapp);

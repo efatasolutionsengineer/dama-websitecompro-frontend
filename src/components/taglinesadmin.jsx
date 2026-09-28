@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -19,7 +20,7 @@ const TaglinesAdmin = () => {
         const fetchTaglines = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/taglines");
+                const response = await fetch(`${API_BASE}/taglines`);
                 if (response.ok) {
                     const data = await response.json();
                     setTaglines(data);
@@ -60,7 +61,7 @@ const TaglinesAdmin = () => {
             formData.append("tagline_sub_text", newTagline.tagline_sub_text);
             formData.append("tagline_img", newTagline.tagline_img);
 
-            const response = await fetch("https://dama-backend.vercel.app/taglines", {
+            const response = await fetch(`${API_BASE}/taglines`, {
                 method: "POST",
                 body: formData,
             });
@@ -103,7 +104,7 @@ const TaglinesAdmin = () => {
                 formData.append("tagline_img", newTagline.tagline_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/taglines/${selectedTagline.id}`, {
+            const response = await fetch(`${API_BASE}/taglines/${selectedTagline.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -141,7 +142,7 @@ const TaglinesAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/taglines/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/taglines/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Tagline deleted successfully!");
                 setTaglines(taglines.filter(tagline => tagline.id !== id));

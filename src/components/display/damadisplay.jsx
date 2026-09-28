@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import { useEffect, useState } from 'react';
 import styles from './damadisplay.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +10,7 @@ const DamaDisplay = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://dama-backend.vercel.app/dama');
+                const response = await fetch(`${API_BASE}/dama`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./servicesadmin.module.css";
 
@@ -24,7 +25,7 @@ const ServicesIndividualAdmin = () => {
         const fetchServicesIndividualData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/services_individual");
+                const response = await fetch(`${API_BASE}/services_individual`);
                 if (response.ok) {
                     const data = await response.json();
                     setServicesIndividualData(data);
@@ -77,7 +78,7 @@ const ServicesIndividualAdmin = () => {
             }
             formData.append("order", newServiceIndividual.order);
 
-            const response = await fetch("https://dama-backend.vercel.app/services_individual", {
+            const response = await fetch(`${API_BASE}/services_individual`, {
                 method: "POST",
                 body: formData,
             });
@@ -123,7 +124,7 @@ const ServicesIndividualAdmin = () => {
             }
             formData.append("order", newServiceIndividual.order);
 
-            const response = await fetch(`https://dama-backend.vercel.app/services_individual/${selectedServiceIndividual.id}`, {
+            const response = await fetch(`${API_BASE}/services_individual/${selectedServiceIndividual.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -164,7 +165,7 @@ const ServicesIndividualAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/services_individual/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/services_individual/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Services Individual deleted successfully!");
                 setServicesIndividualData(servicesIndividualData.filter(serviceIndividual => serviceIndividual.id !== id));

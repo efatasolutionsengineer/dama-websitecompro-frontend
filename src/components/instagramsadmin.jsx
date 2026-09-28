@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -19,7 +20,7 @@ const InstagramsAdmin = () => {
         const fetchInstagrams = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/instagrams");
+                const response = await fetch(`${API_BASE}/instagrams`);
                 if (response.ok) {
                     const data = await response.json();
                     setInstagrams(data);
@@ -60,7 +61,7 @@ const InstagramsAdmin = () => {
             formData.append("instagram_name", newInstagram.instagram_name);
             formData.append("instagram_link", newInstagram.instagram_link);
 
-            const response = await fetch("https://dama-backend.vercel.app/instagrams", {
+            const response = await fetch(`${API_BASE}/instagrams`, {
                 method: "POST",
                 body: formData,
             });
@@ -103,7 +104,7 @@ const InstagramsAdmin = () => {
                 formData.append("instagram_img", newInstagram.instagram_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/instagrams/${selectedInstagram.id}`, {
+            const response = await fetch(`${API_BASE}/instagrams/${selectedInstagram.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -141,7 +142,7 @@ const InstagramsAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/instagrams/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/instagrams/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Instagram data deleted successfully!");
                 setInstagrams(instagrams.filter(instagram => instagram.id !== id));

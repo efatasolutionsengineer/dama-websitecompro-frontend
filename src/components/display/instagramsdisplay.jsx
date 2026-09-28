@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./instagramsdisplay.module.css";
 
@@ -14,7 +15,7 @@ const InstagramsDisplay = () => {
     const fetchInstagrams = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://dama-backend.vercel.app/instagrams");
+        const response = await fetch(`${API_BASE}/instagrams`);
         if (response.ok) {
           const data = await response.json();
           setInstagrams(data); // Remove duplication
@@ -35,7 +36,7 @@ const InstagramsDisplay = () => {
     const fetchUsername = async () => {
       setUsernameLoading(true);
       try {
-        const response = await fetch("https://dama-backend.vercel.app/dama");
+        const response = await fetch(`${API_BASE}/dama`);
         if (response.ok) {
           const data = await response.json();
           setInstagramUsername(data[0].dama_instagram);

@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./peopledisplay.module.css";
 
@@ -10,7 +11,7 @@ const PeopleDisplay = () => {
         const fetchPeopleData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/peoples");
+                const response = await fetch(`${API_BASE}/peoples`);
                 if (response.ok) {
                     const data = await response.json();
                     setPeopleData(data);

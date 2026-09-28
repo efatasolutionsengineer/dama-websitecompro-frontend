@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./worksadmin.module.css";
 
@@ -28,7 +29,7 @@ const ToWorksAdmin = () => {
   const fetchToWorksData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch("https://dama-backend.vercel.app/toworks");
+      const response = await fetch(`${API_BASE}/toworks`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`Failed to fetch: ${errorData.error || response.statusText}`);
@@ -73,7 +74,7 @@ const ToWorksAdmin = () => {
         }
       });
 
-      const response = await fetch(`https://dama-backend.vercel.app/toworks/${selectedToWork.id}`, {
+      const response = await fetch(`${API_BASE}/toworks/${selectedToWork.id}`, {
         method: "PUT",
         body: formData,
       });

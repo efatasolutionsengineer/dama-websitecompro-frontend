@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./servicesadmin.module.css";
 
@@ -24,7 +25,7 @@ const ServicesSpecialAdmin = () => {
         const fetchServicesSpecialData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/services_special");
+                const response = await fetch(`${API_BASE}/services_special`);
                 if (response.ok) {
                     const data = await response.json();
                     setServicesSpecialData(data);
@@ -77,7 +78,7 @@ const ServicesSpecialAdmin = () => {
             }
             formData.append("order", newServiceSpecial.order);
 
-            const response = await fetch("https://dama-backend.vercel.app/services_special", {
+            const response = await fetch(`${API_BASE}/services_special`, {
                 method: "POST",
                 body: formData,
             });
@@ -123,7 +124,7 @@ const ServicesSpecialAdmin = () => {
             }
             formData.append("order", newServiceSpecial.order);
 
-            const response = await fetch(`https://dama-backend.vercel.app/services_special/${selectedServiceSpecial.id}`, {
+            const response = await fetch(`${API_BASE}/services_special/${selectedServiceSpecial.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -164,7 +165,7 @@ const ServicesSpecialAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/services_special/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/services_special/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Services Special deleted successfully!");
                 setServicesSpecialData(servicesSpecialData.filter(serviceSpecial => serviceSpecial.id !== id));

@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 import ReactQuill from 'react-quill';
@@ -19,7 +20,7 @@ const FaqAdmin = () => {
         const fetchFaqData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/faq");
+                const response = await fetch(`${API_BASE}/faq`);
                 if (response.ok) {
                     const data = await response.json();
                     setFaqData(data);
@@ -45,7 +46,7 @@ const FaqAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch("https://dama-backend.vercel.app/faq", {
+            const response = await fetch(`${API_BASE}/faq`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -82,7 +83,7 @@ const FaqAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/faq/${selectedFaq.id}`, {
+            const response = await fetch(`${API_BASE}/faq/${selectedFaq.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -121,7 +122,7 @@ const FaqAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/faq/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/faq/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("FAQ deleted successfully!");
                 setFaqData(faqData.filter(faq => faq.id !== id));

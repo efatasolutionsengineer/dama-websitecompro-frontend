@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./whydisplay.module.css";
 
@@ -10,7 +11,7 @@ const WhyDisplay = () => {
         const fetchWhyData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/whys");
+                const response = await fetch(`${API_BASE}/whys`);
                 if (response.ok) {
                     const data = await response.json();
                     setWhyData(data);

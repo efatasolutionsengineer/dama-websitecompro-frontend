@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from 'react';
 import styles from './blogdetailcontent.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,7 +14,7 @@ const BlogDetailContent = ({ blog }) => {
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const response = await fetch(`https://dama-backend.vercel.app/blogs/${blog.id}`);
+        const response = await fetch(`${API_BASE}/blogs/${blog.id}`);
         if (response.ok) {
           const data = await response.json();
           setBlogData(data);

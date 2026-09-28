@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -17,7 +18,7 @@ const ContactAdmin = () => {
         const fetchContact = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/contacts");
+                const response = await fetch(`${API_BASE}/contacts`);
                 if (response.ok) {
                     const data = await response.json();
                     if (data.length > 0) {
@@ -52,7 +53,7 @@ const ContactAdmin = () => {
                 formData.append("contact_image", newContact.contact_image);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/contacts/${contact.id}`, {
+            const response = await fetch(`${API_BASE}/contacts/${contact.id}`, {
                 method: "PUT",
                 body: formData,
             });

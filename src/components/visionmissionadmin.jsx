@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -17,7 +18,7 @@ const VisionMissionAdmin = () => {
         const fetchVisionMission = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/visionmission");
+                const response = await fetch(`${API_BASE}/visionmission`);
                 if (response.ok) {
                     const data = await response.json();
                     setVisionMission(data);
@@ -56,7 +57,7 @@ const VisionMissionAdmin = () => {
             const formData = new FormData();
             formData.append("visionmission_img", newVisionMission.visionmission_img);
 
-            const response = await fetch("https://dama-backend.vercel.app/visionmission", {
+            const response = await fetch(`${API_BASE}/visionmission`, {
                 method: "POST",
                 body: formData,
             });
@@ -88,7 +89,7 @@ const VisionMissionAdmin = () => {
                 formData.append("visionmission_img", newVisionMission.visionmission_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/visionmission/${selectedVisionMission.id}`, {
+            const response = await fetch(`${API_BASE}/visionmission/${selectedVisionMission.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -122,7 +123,7 @@ const VisionMissionAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/visionmission/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/visionmission/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Vision & Mission deleted successfully!");
                 setVisionMission(visionMission.filter(vm => vm.id !== id));

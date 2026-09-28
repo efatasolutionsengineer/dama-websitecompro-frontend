@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./blogsdisplay.module.css";
 
@@ -11,7 +12,7 @@ const BlogsDisplay = () => {
     const fetchBlogsData = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://dama-backend.vercel.app/blogs");
+        const response = await fetch(`${API_BASE}/blogs`);
         if (response.ok) {
           const data = await response.json();
           setBlogsData(data);

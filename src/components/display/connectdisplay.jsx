@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./connectdisplay.module.css";
 
@@ -11,7 +12,7 @@ const ConnectDisplay = () => {
         const fetchConnectData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/connect");
+                const response = await fetch(`${API_BASE}/connect`);
                 if (response.ok) {
                     const data = await response.json();
                     setConnectData(data[0]); // Mengambil elemen pertama karena hanya ada satu data
@@ -27,7 +28,7 @@ const ConnectDisplay = () => {
 
         const fetchDamaData = async () => {
             try {
-                const response = await fetch("https://dama-backend.vercel.app/dama");
+                const response = await fetch(`${API_BASE}/dama`);
                 if (response.ok) {
                     const data = await response.json();
                     setDamaWhatsapp(data[0].dama_whatsapp);

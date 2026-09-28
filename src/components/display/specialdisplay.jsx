@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./specialdisplay.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,7 +22,7 @@ const SpecialDisplay = () => {
         const fetchServicesSpecialData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/services_special");
+                const response = await fetch(`${API_BASE}/services_special`);
                 if (response.ok) {
                     const data = await response.json();
                     setServicesSpecialData(data);
@@ -38,7 +39,7 @@ const SpecialDisplay = () => {
         const fetchContactData = async () => {
             setContactLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/dama");
+                const response = await fetch(`${API_BASE}/dama`);
                 if (response.ok) {
                     const data = await response.json();
                     setContactData(data[0]);

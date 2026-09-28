@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from 'react';
 import styles from './workdetailcontent.module.css';
 
@@ -9,7 +10,7 @@ const WorkDetailContent = ({ work }) => {
   useEffect(() => {
     const fetchWorkData = async () => {
       try {
-        const response = await fetch(`https://dama-backend.vercel.app/works/${work.id}`);
+        const response = await fetch(`${API_BASE}/works/${work.id}`);
         if (response.ok) {
           const data = await response.json();
           setWorkData(data);

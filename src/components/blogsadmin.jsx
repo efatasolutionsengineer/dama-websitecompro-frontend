@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./worksadmin.module.css";
 import ReactQuill from 'react-quill';
@@ -32,7 +33,7 @@ const BlogsAdmin = () => {
     const fetchBlogsData = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://dama-backend.vercel.app/blogs");
+            const response = await fetch(`${API_BASE}/blogs`);
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(`Failed to fetch: ${errorData.error || response.statusText}`);
@@ -78,7 +79,7 @@ const BlogsAdmin = () => {
                 }
             });
 
-            const response = await fetch("https://dama-backend.vercel.app/blogs", {
+            const response = await fetch(`${API_BASE}/blogs`, {
                 method: "POST",
                 body: formData,
             });
@@ -120,7 +121,7 @@ const BlogsAdmin = () => {
                 }
             });
 
-            const response = await fetch(`https://dama-backend.vercel.app/blogs/${selectedBlog.id}`, {
+            const response = await fetch(`${API_BASE}/blogs/${selectedBlog.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -146,7 +147,7 @@ const BlogsAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/blogs/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/blogs/${id}`, { method: "DELETE" });
             await handleApiError(response, "Blog deleted successfully!");
             setBlogsData(blogsData.filter((blog) => blog.id !== id));
         } catch (error) {

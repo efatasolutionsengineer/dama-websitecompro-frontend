@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./specialdisplay.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,7 +22,7 @@ const IndividualDisplay = () => {
         const fetchServicesIndividualData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/services_individual");
+                const response = await fetch(`${API_BASE}/services_individual`);
                 if (response.ok) {
                     const data = await response.json();
                     // Urutkan data berdasarkan field 'order'
@@ -40,7 +41,7 @@ const IndividualDisplay = () => {
         const fetchContactData = async () => {
             setContactLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/dama");
+                const response = await fetch(`${API_BASE}/dama`);
                 if (response.ok) {
                     const data = await response.json();
                     setContactData(data[0]);

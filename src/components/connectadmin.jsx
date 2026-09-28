@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -16,7 +17,7 @@ const ConnectAdmin = () => {
         const fetchConnectData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/connect");
+                const response = await fetch(`${API_BASE}/connect`);
                 if (response.ok) {
                     const data = await response.json();
                     if (data.length > 0) {
@@ -50,7 +51,7 @@ const ConnectAdmin = () => {
                 formData.append("connect_img", newConnect.connect_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/connect/${connect.id}`, {
+            const response = await fetch(`${API_BASE}/connect/${connect.id}`, {
                 method: "PUT",
                 body: formData,
             });

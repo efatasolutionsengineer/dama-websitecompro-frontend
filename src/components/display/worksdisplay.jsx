@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./worksdisplay.module.css"; // Pastikan path ke CSS benar
 
@@ -22,7 +23,7 @@ const WorksDisplay = () => {
     useEffect(() => {
         const fetchWorksData = async () => {
             try {
-                const response = await fetch("https://dama-backend.vercel.app/works");
+                const response = await fetch(`${API_BASE}/works`);
                 if (response.ok) {
                     const data = await response.json();
                     setWorksData(data);
@@ -38,7 +39,7 @@ const WorksDisplay = () => {
 
         const fetchWorkPage = async () => {
             try {
-                const response = await fetch("https://dama-backend.vercel.app/work_page");
+                const response = await fetch(`${API_BASE}/work_page`);
                 if (response.ok) {
                     const data = await response.json();
                     setWorkPage(data[0]); // Assuming we take the first work page

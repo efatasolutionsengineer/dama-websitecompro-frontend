@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css"; // Menggunakan homeadmin.module.css
 
@@ -14,7 +15,7 @@ const WhyAdmin = () => {
         const fetchWhys = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/whys");
+                const response = await fetch(`${API_BASE}/whys`);
                 if (response.ok) {
                     const data = await response.json();
                     setWhys(data);
@@ -39,7 +40,7 @@ const WhyAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch("https://dama-backend.vercel.app/whys", {
+            const response = await fetch(`${API_BASE}/whys`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newWhy),
@@ -71,7 +72,7 @@ const WhyAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/whys/${selectedWhy.id}`, {
+            const response = await fetch(`${API_BASE}/whys/${selectedWhy.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newWhy),
@@ -105,7 +106,7 @@ const WhyAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/whys/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/whys/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Why deleted successfully!");
                 setWhys(whys.filter((why) => why.id !== id));

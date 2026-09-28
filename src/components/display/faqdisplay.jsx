@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./faqdisplay.module.css";
 
@@ -10,7 +11,7 @@ const FaqDisplay = () => {
   useEffect(() => {
     const fetchFaqData = async () => {
       try {
-        const response = await fetch("https://dama-backend.vercel.app/faq");
+        const response = await fetch(`${API_BASE}/faq`);
         if (response.ok) {
           const data = await response.json();
           setFaqData(data);

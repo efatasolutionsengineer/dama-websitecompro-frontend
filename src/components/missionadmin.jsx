@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css"; // Menggunakan homeadmin.module.css
 
@@ -14,7 +15,7 @@ const MissionAdmin = () => {
         const fetchMissions = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/missions");
+                const response = await fetch(`${API_BASE}/missions`);
                 if (response.ok) {
                     const data = await response.json();
                     setMissions(data);
@@ -39,7 +40,7 @@ const MissionAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch("https://dama-backend.vercel.app/missions", {
+            const response = await fetch(`${API_BASE}/missions`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newMission),
@@ -71,7 +72,7 @@ const MissionAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/missions/${selectedMission.id}`, {
+            const response = await fetch(`${API_BASE}/missions/${selectedMission.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newMission),
@@ -105,7 +106,7 @@ const MissionAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/missions/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/missions/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Mission deleted successfully!");
                 setMissions(missions.filter((mission) => mission.id !== id));

@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 const ClientDisplay = () => {
@@ -10,7 +11,7 @@ const ClientDisplay = () => {
         const fetchClients = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/ourclients");
+                const response = await fetch(`${API_BASE}/ourclients`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css"; // Menggunakan homeadmin.module.css
 
@@ -16,7 +17,7 @@ const ToServicesAdmin = () => {
         const fetchToServices = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/toservices");
+                const response = await fetch(`${API_BASE}/toservices`);
                 if (response.ok) {
                     const data = await response.json();
                     if (data.length > 0) {
@@ -90,8 +91,8 @@ const ToServicesAdmin = () => {
 
         try {
             const url = toService
-                ? `https://dama-backend.vercel.app/toservices/${toService.id}`
-                : "https://dama-backend.vercel.app/toservices";
+                ? `${API_BASE}/toservices/${toService.id}`
+                : `${API_BASE}/toservices`;
             const method = toService ? "PUT" : "POST";
 
             const response = await fetch(url, {

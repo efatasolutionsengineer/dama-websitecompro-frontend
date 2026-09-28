@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -19,7 +20,7 @@ const OurClientsAdmin = () => {
         const fetchClients = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/ourclients");
+                const response = await fetch(`${API_BASE}/ourclients`);
                 if (response.ok) {
                     const data = await response.json();
                     setClients(data);
@@ -60,7 +61,7 @@ const OurClientsAdmin = () => {
             formData.append("client_link", newClient.client_link);
             formData.append("client_logo_img", newClient.client_logo_img);
 
-            const response = await fetch("https://dama-backend.vercel.app/ourclients", {
+            const response = await fetch(`${API_BASE}/ourclients`, {
                 method: "POST",
                 body: formData,
             });
@@ -103,7 +104,7 @@ const OurClientsAdmin = () => {
                 formData.append("client_logo_img", newClient.client_logo_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/ourclients/${selectedClient.id}`, {
+            const response = await fetch(`${API_BASE}/ourclients/${selectedClient.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -141,7 +142,7 @@ const OurClientsAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/ourclients/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/ourclients/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Client deleted successfully!");
                 setClients(clients.filter(client => client.id !== id));

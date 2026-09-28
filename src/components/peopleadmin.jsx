@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css"; // Menggunakan homeadmin.module.css
 
@@ -19,7 +20,7 @@ const PeopleAdmin = () => {
         const fetchPeople = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/peoples");
+                const response = await fetch(`${API_BASE}/peoples`);
                 if (response.ok) {
                     const data = await response.json();
                     setPeople(data);
@@ -50,7 +51,7 @@ const PeopleAdmin = () => {
             formData.append("people_role", newPerson.people_role);
             formData.append("people_img", newPerson.people_img);
 
-            const response = await fetch("https://dama-backend.vercel.app/peoples", {
+            const response = await fetch(`${API_BASE}/peoples`, {
                 method: "POST",
                 body: formData,
             });
@@ -89,7 +90,7 @@ const PeopleAdmin = () => {
                 formData.append("people_img", newPerson.people_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/peoples/${selectedPerson.id}`, {
+            const response = await fetch(`${API_BASE}/peoples/${selectedPerson.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -123,7 +124,7 @@ const PeopleAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/peoples/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/peoples/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Person deleted successfully!");
                 setPeople(people.filter((person) => person.id !== id));

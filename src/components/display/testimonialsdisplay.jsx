@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./testimonialsdisplay.module.css";
 
@@ -14,7 +15,7 @@ const TestimonialsDisplay = () => {
         const fetchTestimonials = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/testimonials");
+                const response = await fetch(`${API_BASE}/testimonials`);
                 if (response.ok) {
                     const data = await response.json();
                     setTestimonials(data);

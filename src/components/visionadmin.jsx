@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -16,7 +17,7 @@ const VisionAdmin = () => {
         const fetchVisions = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/visions");
+                const response = await fetch(`${API_BASE}/visions`);
                 if (response.ok) {
                     const data = await response.json();
                     setVisions(data);
@@ -42,7 +43,7 @@ const VisionAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch("https://dama-backend.vercel.app/visions", {
+            const response = await fetch(`${API_BASE}/visions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -76,7 +77,7 @@ const VisionAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/visions/${selectedVision.id}`, {
+            const response = await fetch(`${API_BASE}/visions/${selectedVision.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -112,7 +113,7 @@ const VisionAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/visions/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/visions/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Vision deleted successfully!");
                 setVisions(visions.filter((vision) => vision.id !== id));

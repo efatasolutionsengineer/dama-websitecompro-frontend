@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect } from "react";
 import styles from "./homeadmin.module.css";
 
@@ -19,7 +20,7 @@ const TestimonialsAdmin = () => {
         const fetchTestimonials = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/testimonials");
+                const response = await fetch(`${API_BASE}/testimonials`);
                 if (response.ok) {
                     const data = await response.json();
                     setTestimonials(data);
@@ -60,7 +61,7 @@ const TestimonialsAdmin = () => {
             formData.append("testimonial_text", newTestimonial.testimonial_text);
             formData.append("testimonial_img", newTestimonial.testimonial_img);
 
-            const response = await fetch("https://dama-backend.vercel.app/testimonials", {
+            const response = await fetch(`${API_BASE}/testimonials`, {
                 method: "POST",
                 body: formData,
             });
@@ -103,7 +104,7 @@ const TestimonialsAdmin = () => {
                 formData.append("testimonial_img", newTestimonial.testimonial_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/testimonials/${selectedTestimonial.id}`, {
+            const response = await fetch(`${API_BASE}/testimonials/${selectedTestimonial.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -141,7 +142,7 @@ const TestimonialsAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/testimonials/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/testimonials/${id}`, { method: "DELETE" });
             if (response.ok) {
                 setMessage("Testimonial deleted successfully!");
                 setTestimonials(testimonials.filter(testimonial => testimonial.id !== id));

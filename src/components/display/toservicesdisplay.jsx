@@ -1,3 +1,4 @@
+import { API_BASE } from '../../lib/apiBase.js';
 import React, { useState, useEffect } from 'react';
 import styles from './toservicesdisplay.module.css';
 
@@ -10,7 +11,7 @@ const ToServicesDisplay = () => {
         const fetchToServices = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://dama-backend.vercel.app/toservices");
+                const response = await fetch(`${API_BASE}/toservices`);
                 if (response.ok) {
                     const data = await response.json();
                     if (data.length > 0) {

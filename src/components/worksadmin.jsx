@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./worksadmin.module.css";
 import ReactQuill from 'react-quill';
@@ -43,7 +44,7 @@ const WorksAdmin = () => {
     const fetchWorksData = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://dama-backend.vercel.app/works");
+            const response = await fetch(`${API_BASE}/works`);
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(`Failed to fetch: ${errorData.error || response.statusText}`);
@@ -110,7 +111,7 @@ const WorksAdmin = () => {
                 }
             });
 
-            const response = await fetch("https://dama-backend.vercel.app/works", {
+            const response = await fetch(`${API_BASE}/works`, {
                 method: "POST",
                 body: formData,
             });
@@ -164,7 +165,7 @@ const WorksAdmin = () => {
                 }
             });
 
-            const response = await fetch(`https://dama-backend.vercel.app/works/${selectedWork.id}`, {
+            const response = await fetch(`${API_BASE}/works/${selectedWork.id}`, {
                 method: "PUT",
                 body: formData,
             });
@@ -191,7 +192,7 @@ const WorksAdmin = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://dama-backend.vercel.app/works/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_BASE}/works/${id}`, { method: "DELETE" });
             await handleApiError(response, `Work with ID ${id} deleted successfully!`);
             setWorksData(worksData.filter((work) => work.id !== id));
         } catch (error) {

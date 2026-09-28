@@ -1,3 +1,4 @@
+import { API_BASE } from '../lib/apiBase.js';
 import React, { useState, useEffect, useCallback } from "react";
 import styles from "./worksadmin.module.css";
 
@@ -19,7 +20,7 @@ const WorkPageAdmin = () => {
     const fetchWorkPages = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://dama-backend.vercel.app/work_page");
+            const response = await fetch(`${API_BASE}/work_page`);
             if (response.ok) {
                 const data = await response.json();
                 setWorkPages(data);
@@ -71,7 +72,7 @@ const WorkPageAdmin = () => {
                 formData.append("work_page_img", newWorkPage.work_page_img);
             }
 
-            const response = await fetch(`https://dama-backend.vercel.app/work_page/${selectedWorkPage.id}`, {
+            const response = await fetch(`${API_BASE}/work_page/${selectedWorkPage.id}`, {
                 method: "PUT",
                 body: formData,
             });
