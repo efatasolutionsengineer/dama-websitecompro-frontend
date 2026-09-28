@@ -19,7 +19,7 @@ export default function AdminLogin() {
             setMessage('Email atau password salah');
             return;
         }
-        window.location.replace('/adminonlydama/homedama');
+        window.location.replace('/adminonlydama/homedama/');
     }
 
     return (

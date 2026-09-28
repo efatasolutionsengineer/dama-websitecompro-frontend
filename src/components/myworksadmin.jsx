@@ -25,11 +25,11 @@ const MyWorksAdmin = () => {
 </div>
 
             <div className={styles.goToContainer}>
-                <button onClick={() => navigateTo('/adminonlydama/servicesdama')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Services Page</button>
-                <button onClick={() => navigateTo('/adminonlydama/homedama')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Home Page</button>
-                <button onClick={() => navigateTo('/adminonlydama/footerdama')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Footer Page</button>
-                <button onClick={() => navigateTo('/adminonlydama/aboutdama')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to About Page</button>
-                <button onClick={() => navigateTo('/adminonlydama/blogsdama')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Blogs Page</button>
+                <button onClick={() => navigateTo('/adminonlydama/servicesdama/')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Services Page</button>
+                <button onClick={() => navigateTo('/adminonlydama/homedama/')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Home Page</button>
+                <button onClick={() => navigateTo('/adminonlydama/footerdama/')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Footer Page</button>
+                <button onClick={() => navigateTo('/adminonlydama/aboutdama/')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to About Page</button>
+                <button onClick={() => navigateTo('/adminonlydama/blogsdama/')} className={`${styles.adminButton} ${styles.goToButton}`}>Go to Blogs Page</button>
             </div>
 
             <div className={styles.showContainer}>

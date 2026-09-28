@@ -12,7 +12,7 @@ export default function AdminGate({ children }) {
 
     useEffect(() => {
         if (status === 'out') {
-            window.location.replace('/adminonlydama/login');
+            window.location.replace('/adminonlydama/login/');
         }
     }, [status]);
 

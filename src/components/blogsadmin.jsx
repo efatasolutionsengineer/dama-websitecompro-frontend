@@ -265,7 +265,7 @@ const BlogsAdmin = () => {
 
     return (
         <section className={styles.adminContainer}>
-            <h2><a href="/adminonlydama/homedama">Blogs Admin</a></h2>
+            <h2><a href="/adminonlydama/homedama/">Blogs Admin</a></h2>
 
             <div style={{ fontSize: '0.8em', color: 'red',textAlign: 'left', marginBottom: '5px' }}>
     Note: blogs banner 1200x600, blogs image 500x500

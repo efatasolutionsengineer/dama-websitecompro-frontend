@@ -37,7 +37,7 @@ export default function AccountAdmin() {
 
     async function logout() {
         await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
-        window.location.replace('/adminonlydama/login');
+        window.location.replace('/adminonlydama/login/');
     }
 
     return (

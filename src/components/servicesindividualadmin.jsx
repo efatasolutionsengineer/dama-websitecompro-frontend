@@ -249,7 +249,7 @@ const ServicesIndividualAdmin = () => {
 
     return (
         <section className={styles.adminContainer}>
-            <h2><a href="/adminonlydama/homedama">Services Individual Admin</a></h2>
+            <h2><a href="/adminonlydama/homedama/">Services Individual Admin</a></h2>
 
             <div style={{ fontSize: '0.8em', color: 'red',textAlign: 'left', marginBottom: '5px' }}>
     Note: image size 500x400

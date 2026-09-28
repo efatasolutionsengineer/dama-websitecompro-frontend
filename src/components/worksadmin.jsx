@@ -345,7 +345,7 @@ const WorksAdmin = () => {
 
     return (
         <section className={styles.adminContainer}>
-            <h2><a href="/adminonlydama/homedama">Works Admin</a></h2>
+            <h2><a href="/adminonlydama/homedama/">Works Admin</a></h2>
 
             <div style={{ fontSize: '0.8em', color: 'red',textAlign: 'left', marginBottom: '5px' }}>
     Note: work banner 1200x400, work item 500x500
