@@ -102,8 +102,7 @@ jobs:
             docker run -d \
               --name dama-websitecompro-frontend \
               --restart unless-stopped \
-              --add-host=host.docker.internal:host-gateway \
-              -p 3160:80 \
+              --network host \
               "${IMAGE_NAME}:${IMAGE_TAG}"
 
             docker image prune -f || true
