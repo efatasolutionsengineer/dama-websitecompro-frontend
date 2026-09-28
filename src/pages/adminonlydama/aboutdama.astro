@@ -1,8 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AdminGate from '../../components/AdminGate.jsx';
 import MyAboutAdmin from '../../components/myaboutadmin.jsx';
 ---
 
 <Layout title="Home Page">
-    <MyAboutAdmin client:load />
+    <AdminGate client:load>
+        <MyAboutAdmin client:load />
+    </AdminGate>
 </Layout>

@@ -1,8 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AdminGate from '../../components/AdminGate.jsx';
 import MyFooterAdmin from '../../components/myfooteradmin.jsx';
 ---
 
 <Layout title="Home Page">
-    <MyFooterAdmin client:only />
+    <AdminGate client:only="react">
+        <MyFooterAdmin client:only="react" />
+    </AdminGate>
 </Layout>

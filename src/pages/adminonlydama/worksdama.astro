@@ -1,8 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AdminGate from '../../components/AdminGate.jsx';
 import MyWorksAdmin from '../../components/myworksadmin.jsx';
 ---
 
 <Layout title="Home Page">
-    <MyWorksAdmin client:only />
+    <AdminGate client:only="react">
+        <MyWorksAdmin client:only="react" />
+    </AdminGate>
 </Layout>

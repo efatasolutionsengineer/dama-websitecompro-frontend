@@ -6,6 +6,7 @@ import ToworksAdmin from '../components/toworksadmin.jsx';
 import TestimonialsAdmin from '../components/testimonialsadmin.jsx';
 import ConnectAdmin from '../components/connectadmin.jsx';
 import InstagramsAdmin from '../components/instagramsadmin.jsx';
+import AccountAdmin from './AccountAdmin.jsx';
 import styles from './myhomeadmin.module.css';
 
 const MyHomeAdmin = () => {
@@ -25,6 +26,7 @@ const MyHomeAdmin = () => {
     return (
         <div className={styles.adminContainer}>
             <h2>Home Admin Panel</h2>
+            <AccountAdmin />
             <div style={{ fontSize: '0.8em', color: 'red',textAlign: 'left', marginBottom: '5px' }}>
     Note: Uploads are limited to 5GB due to database constraints.
 </div>
