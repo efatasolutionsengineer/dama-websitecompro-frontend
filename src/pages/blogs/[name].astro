@@ -21,11 +21,17 @@ export async function getStaticPaths() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const blogs: Blog[] = await response.json();
+    const seen = new Set<string>();
 
-    return blogs.map((blog) => ({
-      params: { name: blog.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-') },
-      props: { blog },
-    }));
+    return blogs.flatMap((blog) => {
+      const name = String(blog.slug ?? '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      if (!name || seen.has(name)) return [];
+      seen.add(name);
+      return [{ params: { name }, props: { blog } }];
+    });
   } catch (error) {
     console.error('Error fetching blogs for getStaticPaths:', error);
     return [];
