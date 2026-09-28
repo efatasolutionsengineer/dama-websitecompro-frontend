@@ -1,4 +1,5 @@
 import { API_BASE } from '../lib/apiBase.js';
+import { asList } from '../lib/asList.js';
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./worksadmin.module.css";
 import ReactQuill from 'react-quill';
@@ -50,7 +51,7 @@ const WorksAdmin = () => {
                 throw new Error(`Failed to fetch: ${errorData.error || response.statusText}`);
             }
             const data = await response.json();
-            setWorksData(data);
+            setWorksData(data.map((work) => ({ ...work, work_img: asList(work.work_img) })));
         } catch (error) {
             console.error("Error fetching Works data:", error);
             setMessage(`Failed to fetch Works data: ${error.message}`);
@@ -118,7 +119,8 @@ const WorksAdmin = () => {
 
             const responseData = await handleApiError(response, `Work "${newWork.work_title}" added successfully!`);
             if (responseData && responseData.length > 0) {
-                setWorksData([...worksData, responseData[0]]);
+                const created = { ...responseData[0], work_img: asList(responseData[0].work_img) };
+                setWorksData([...worksData, created]);
                 resetForm();
             }
         } catch (error) {
@@ -172,8 +174,9 @@ const WorksAdmin = () => {
 
             const responseData = await handleApiError(response, `Work "${newWork.work_title}" updated successfully!`);
             if (responseData && responseData.length > 0) {
+                const updated = { ...responseData[0], work_img: asList(responseData[0].work_img) };
                 const updatedWorksData = worksData.map((work) =>
-                    work.id === responseData[0].id ? responseData[0] : work
+                    work.id === updated.id ? updated : work
                 );
                 setWorksData(updatedWorksData);
                 resetForm();
@@ -269,6 +272,7 @@ const WorksAdmin = () => {
     }, []);
 
     const handleEdit = useCallback((work, index) => {
+        const images = asList(work.work_img);
         setSelectedWork(work);
         setNewWork({
             work_title: work.work_title || "",
@@ -279,14 +283,14 @@ const WorksAdmin = () => {
             work_category: work.work_category || "",
             work_main_img: null,
             work_logo_img: null,
-            work_img: work.work_img || [],
+            work_img: images,
         });
         setMainImagePreview(work.work_main_img);
         setLogoImagePreview(work.work_logo_img);
-        setWorkImagesPreview(work.work_img || []);
+        setWorkImagesPreview(images);
         setEditIndex(index);
         setShowForm(true);
-        setWorkImageInputs(work.work_img ? work.work_img.map((_, i) => i) : []);
+        setWorkImageInputs(images.map((_, i) => i));
         setEditItemId(work.id);
         setShowAddForm(false);
     }, []);
@@ -509,7 +513,7 @@ const WorksAdmin = () => {
                             <p>{work.work_detail}</p>
                             <p>{work.work_people}</p>
                             <div className={styles.workImageContainer}>
-                                {work.work_img && work.work_img.map((img, imgIndex) => (
+                                {asList(work.work_img).map((img, imgIndex) => (
                                     <img key={imgIndex} src={img} alt={`Work Image ${imgIndex}`} className={styles.workImage} />
                                 ))}
                                 {work.work_main_img && <img src={work.work_main_img} alt="Main" className={styles.workImage} />}

@@ -1,4 +1,5 @@
 import { API_BASE } from '../../lib/apiBase.js';
+import { asList } from '../../lib/asList.js';
 import React, { useState, useEffect } from 'react';
 import styles from './workdetailcontent.module.css';
 
@@ -13,9 +14,10 @@ const WorkDetailContent = ({ work }) => {
         const response = await fetch(`${API_BASE}/works/${work.id}`);
         if (response.ok) {
           const data = await response.json();
-          setWorkData(data);
-          if (data && data.work_img && data.work_img.length > 0) {
-            setSelectedImage(data.work_img[0]);
+          const images = asList(data.work_img);
+          setWorkData({ ...data, work_img: images });
+          if (images.length > 0) {
+            setSelectedImage(images[0]);
           }
         } else {
           console.error('Failed to fetch work data:', response.status);
