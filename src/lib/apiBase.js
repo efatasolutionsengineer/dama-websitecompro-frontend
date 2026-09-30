@@ -1,4 +1,4 @@
-const browserBase = 'http://208.87.132.238:3160/api';
+const browserBase = '/api';
 
 export const API_BASE = import.meta.env.SSR
     ? (process.env.BUILD_API_URL || 'http://208.87.132.238:8160')
