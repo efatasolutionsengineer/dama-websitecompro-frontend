@@ -1,55 +1,28 @@
 ---
 import { API_BASE } from '../../lib/apiBase.js';
+import { slugify } from '../../lib/slugify.js';
 import WorkDetailContent from '../../components/display/workdetailcontent.jsx';
 import Layout from '../../layouts/Layout.astro';
 
-interface Work {
-  id: number;
-  work_title: string;
-  work_subtitle: string;
-  work_desc: string;
-  work_detail: string;
-  work_people: string;
-  work_category: string;
-  work_img: string[];
-  work_main_img: string;
-  work_logo_img: string;
-}
-
 export async function getStaticPaths() {
-  try {
-    const response = await fetch(`${API_BASE}/works`);
-    const works: Work[] = await response.json();
-    const seen = new Set<string>();
-
-    return works.flatMap((work) => {
-      const name = String(work.work_title ?? '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-      if (!name || seen.has(name)) return [];
-      seen.add(name);
-      return [{ params: { name }, props: { work } }];
-    });
-  } catch (error) {
-    console.error('Error fetching works for getStaticPaths:', error);
-    return [];
+  const response = await fetch(`${API_BASE}/works`);
+  if (!response.ok) {
+    throw new Error(`Could not load works while building pages (${response.status})`);
   }
+  const works = await response.json();
+  const seen = new Set();
+
+  return works.flatMap((work) => {
+    const name = slugify(work.work_title);
+    if (!name || seen.has(name)) return [];
+    seen.add(name);
+    return [{ params: { name }, props: { work } }];
+  });
 }
 
-const { work } = Astro.props as { work: Work };
+const { work } = Astro.props;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{work.work_title}</title>
-  </head>
-
-  <Layout title="Fashion Consultant">
-    <body>
-      <WorkDetailContent work={work} client:load />
-    </body>
-  </Layout>
-</html>
+<Layout title={work.work_title}>
+  <WorkDetailContent work={work} client:load />
+</Layout>

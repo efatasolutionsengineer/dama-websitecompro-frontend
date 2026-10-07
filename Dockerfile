@@ -6,7 +6,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-ARG BUILD_API_URL=http://208.87.132.238:8160
+ARG BUILD_API_URL=https://damastudio.id/api
 ENV BUILD_API_URL=$BUILD_API_URL
 RUN npm run build
 

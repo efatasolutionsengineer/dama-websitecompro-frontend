@@ -1,4 +1,5 @@
 import { API_BASE } from '../../lib/apiBase.js';
+import { slugify } from '../../lib/slugify.js';
 import React, { useState, useEffect } from "react";
 import styles from "./worksdisplay.module.css"; // Pastikan path ke CSS benar
 
@@ -111,7 +112,7 @@ const WorksDisplay = () => {
             <div className={styles.worksGrid}>
                 {filteredWorks.map(work => (
                     <div key={work.id} className={styles.workItem}>
-                        <a href={`/works/${work.work_title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
+                        <a href={`/works/${slugify(work.work_title)}`}>
                             <div className={styles.workItemImageContainer}>
                                 {work.work_main_img && (
                                     <img src={work.work_main_img} alt={work.work_title} className={styles.workImage} />

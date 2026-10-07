@@ -75,18 +75,32 @@ const ClientDisplay = () => {
                 role="region"
                 aria-label="Client Logos"
             >
-                {duplicatedClients.map((client) => (
-                    <a
-                        key={`${client.id}-${Math.random()}`}
-                        href={client.client_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ margin: '0 32px', cursor: 'pointer', display: 'inline-block' }}
-                        aria-label={`Client logo: ${client.client_name}`}
-                    >
+                {duplicatedClients.map((client, index) => {
+                    const link = String(client.client_link || '').trim();
+                    const href = /^https?:\/\//i.test(link) ? link : null;
+                    const logo = (
                         <img src={client.client_logo_img} alt={client.client_name} style={{ height: '80px', objectFit: 'contain', maxWidth: '160px' }} />
-                    </a>
-                ))}
+                    );
+                    if (!href) {
+                        return (
+                            <span key={`${client.id}-${index}`} style={{ margin: '0 32px', display: 'inline-block' }} aria-label={`Client logo: ${client.client_name}`}>
+                                {logo}
+                            </span>
+                        );
+                    }
+                    return (
+                        <a
+                            key={`${client.id}-${index}`}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ margin: '0 32px', cursor: 'pointer', display: 'inline-block' }}
+                            aria-label={`Client logo: ${client.client_name}`}
+                        >
+                            {logo}
+                        </a>
+                    );
+                })}
             </div>
         </section>
     );

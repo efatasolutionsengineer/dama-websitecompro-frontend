@@ -1,4 +1,5 @@
 import { API_BASE } from '../../lib/apiBase.js';
+import { slugify } from '../../lib/slugify.js';
 import React, { useState, useEffect } from "react";
 import styles from "./blogsdisplay.module.css";
 
@@ -79,7 +80,7 @@ const BlogsDisplay = () => {
             <h2 className={styles.sectionTitle}>Pinned Blogs</h2>
             {sortedPinnedBlogs.map((blog) => (
               <div key={blog.id} className={styles.blogItem}>
-                <a href={`/blogs/${blog.slug.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
+                <a href={`/blogs/${slugify(blog.slug || blog.title)}`}>
                   <div className={styles.blogContent}>
                     <h3 className={styles.blogTitle}>{blog.title}</h3>
                     <p className={styles.excerpt}>{blog.excerpt}</p>
@@ -106,7 +107,7 @@ const BlogsDisplay = () => {
           {sortedUnpinnedBlogs.length > 0 && <h2 className={styles.sectionTitle}>Blogs</h2>}
           {sortedUnpinnedBlogs.map((blog) => (
             <div key={blog.id} className={styles.blogItem}>
-              <a href={`/blogs/${blog.slug.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
+              <a href={`/blogs/${slugify(blog.slug || blog.title)}`}>
                 <div className={styles.blogContent}>
                   <h3 className={styles.blogTitle}>{blog.title}</h3>
                   <p className={styles.excerpt}>{blog.excerpt}</p>

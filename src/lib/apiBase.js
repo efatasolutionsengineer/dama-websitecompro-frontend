@@ -1,7 +1,7 @@
 const browserBase = '/api';
 
 export const API_BASE = import.meta.env.SSR
-    ? (process.env.BUILD_API_URL || 'http://208.87.132.238:8160')
+    ? (process.env.BUILD_API_URL || 'https://damastudio.id/api')
     : browserBase;
 
 if (!import.meta.env.SSR && typeof window !== 'undefined' && !window.__damaFetchPatched) {

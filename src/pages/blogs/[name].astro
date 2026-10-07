@@ -1,57 +1,28 @@
 ---
 import { API_BASE } from '../../lib/apiBase.js';
+import { slugify } from '../../lib/slugify.js';
 import BlogDetailContent from '../../components/display/blogdetailcontent.jsx';
 import Layout from '../../layouts/Layout.astro';
 
-interface Blog {
-  id: number;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  author_name: string;
-  published_at: string;
-  cover_image: string;
-  image_list: string[];
-}
-
 export async function getStaticPaths() {
-  try {
-    const response = await fetch(`${API_BASE}/blogs`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const blogs: Blog[] = await response.json();
-    const seen = new Set<string>();
-
-    return blogs.flatMap((blog) => {
-      const name = String(blog.slug ?? '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-      if (!name || seen.has(name)) return [];
-      seen.add(name);
-      return [{ params: { name }, props: { blog } }];
-    });
-  } catch (error) {
-    console.error('Error fetching blogs for getStaticPaths:', error);
-    return [];
+  const response = await fetch(`${API_BASE}/blogs`);
+  if (!response.ok) {
+    throw new Error(`Could not load blogs while building pages (${response.status})`);
   }
+  const blogs = await response.json();
+  const seen = new Set();
+
+  return blogs.flatMap((blog) => {
+    const name = slugify(blog.slug || blog.title);
+    if (!name || seen.has(name)) return [];
+    seen.add(name);
+    return [{ params: { name }, props: { blog } }];
+  });
 }
 
-const { blog } = Astro.props as { blog: Blog };
+const { blog } = Astro.props;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{blog.title}</title>
-  </head>
-
-  <Layout title="Fashion Consultant">
-    <body>
-      <BlogDetailContent blog={blog} client:load />
-    </body>
-  </Layout>
-</html>
+<Layout title={blog.title}>
+  <BlogDetailContent blog={blog} client:load />
+</Layout>
