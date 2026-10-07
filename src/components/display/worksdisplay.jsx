@@ -109,6 +109,7 @@ const WorksDisplay = () => {
                 ))}
             </div>
 
+            {filteredWorks.length > 0 ? (
             <div className={styles.worksGrid}>
                 {filteredWorks.map(work => (
                     <div key={work.id} className={styles.workItem}>
@@ -128,6 +129,15 @@ const WorksDisplay = () => {
                     </div>
                 ))}
             </div>
+            ) : (
+            <div className={styles.emptyCategory}>
+                <p className={styles.emptyEyebrow}>Coming soon</p>
+                <h3>{selectedCategory === "All" ? "Our selected projects" : selectedCategory}</h3>
+                <p>
+                    This is work Dama already does for fashion brands. A selected project from this practice will be published here soon.
+                </p>
+            </div>
+            )}
             </section>
 
         </section>
