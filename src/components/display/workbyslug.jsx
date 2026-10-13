@@ -2,6 +2,7 @@ import { API_BASE } from '../../lib/apiBase.js';
 import { slugify } from '../../lib/slugify.js';
 import { useEffect, useState } from 'react';
 import WorkDetailContent from './workdetailcontent.jsx';
+import PageNotFound from './pagenotfound.jsx';
 
 export default function WorkBySlug() {
     const [work, setWork] = useState(null);
@@ -32,11 +33,7 @@ export default function WorkBySlug() {
     }
 
     if (!work) {
-        return (
-            <p style={{ padding: '2rem' }}>
-                This project is not available. <a href="/works">Back to Our Works</a>
-            </p>
-        );
+        return <PageNotFound backHref="/works" backLabel="Back to Our Works" />;
     }
 
     return <WorkDetailContent work={work} />;

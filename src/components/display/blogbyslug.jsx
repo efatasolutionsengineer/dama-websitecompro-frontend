@@ -2,6 +2,7 @@ import { API_BASE } from '../../lib/apiBase.js';
 import { slugify } from '../../lib/slugify.js';
 import { useEffect, useState } from 'react';
 import BlogDetailContent from './blogdetailcontent.jsx';
+import PageNotFound from './pagenotfound.jsx';
 
 export default function BlogBySlug() {
     const [blog, setBlog] = useState(null);
@@ -32,11 +33,7 @@ export default function BlogBySlug() {
     }
 
     if (!blog) {
-        return (
-            <p style={{ padding: '2rem' }}>
-                This article is not available. <a href="/blogs">Back to Blog</a>
-            </p>
-        );
+        return <PageNotFound backHref="/blogs" backLabel="Back to Blog" />;
     }
 
     return <BlogDetailContent blog={blog} />;
