@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BlogBySlug from '../components/display/blogbyslug.jsx';
+---
+
+<Layout title="Blog">
+    <BlogBySlug client:only="react" />
+</Layout>

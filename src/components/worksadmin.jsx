@@ -1,9 +1,23 @@
 import { API_BASE } from '../lib/apiBase.js';
 import { asList } from '../lib/asList.js';
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import styles from "./worksadmin.module.css";
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import tema snow
+import 'react-quill/dist/quill.snow.css';
+
+const quillModules = {
+    toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean'],
+    ],
+};
+
+const quillFormats = ['bold', 'italic', 'underline', 'strike', 'list'];
+
+function editorText(html) {
+    return String(html || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+}
 
 const WorksAdmin = () => {
     const [worksData, setWorksData] = useState([]);
@@ -30,6 +44,13 @@ const WorksAdmin = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [editItemId, setEditItemId] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false);
+    const editorRef = useRef(null);
+
+    const readDesc = useCallback(() => {
+        const live = editorRef.current?.getEditor?.()?.root?.innerHTML || '';
+        if (editorText(live)) return live;
+        return newWork.work_desc;
+    }, [newWork.work_desc]);
 
     const VALID_WORK_CATEGORIES = [
         "Start Up Package",
@@ -81,12 +102,13 @@ const WorksAdmin = () => {
     }, []);
 
     const addWork = useCallback(async () => {
-        if (!newWork.work_title || !newWork.work_desc || !newWork.work_category) {
+        const draft = { ...newWork, work_desc: readDesc() };
+        if (!draft.work_title || !editorText(draft.work_desc) || !draft.work_category) {
             setMessage("Title, description, and category are required.");
             return;
         }
 
-        if (!VALID_WORK_CATEGORIES.includes(newWork.work_category)) {
+        if (!VALID_WORK_CATEGORIES.includes(draft.work_category)) {
             setMessage("Invalid work category.");
             return;
         }
@@ -94,19 +116,19 @@ const WorksAdmin = () => {
         setLoading(true);
         try {
             const formData = new FormData();
-            Object.keys(newWork).forEach((key) => {
+            Object.keys(draft).forEach((key) => {
                 if (key === "work_img") {
-                    newWork.work_img.forEach((file) => {
+                    draft.work_img.forEach((file) => {
                         if (file) {
                             formData.append("work_img", file);
                         }
                     });
                 } else if (key === "work_main_img" || key === "work_logo_img"){
-                    if(newWork[key]){
-                        formData.append(key, newWork[key]);
+                    if(draft[key]){
+                        formData.append(key, draft[key]);
                     }
-                } else if (newWork[key] !== null && newWork[key] !== undefined) {
-                    formData.append(key, newWork[key]);
+                } else if (draft[key] !== null && draft[key] !== undefined) {
+                    formData.append(key, draft[key]);
                 } else {
                     formData.append(key, "");
                 }
@@ -117,7 +139,7 @@ const WorksAdmin = () => {
                 body: formData,
             });
 
-            const responseData = await handleApiError(response, `Work "${newWork.work_title}" added successfully!`);
+            const responseData = await handleApiError(response, `Work "${draft.work_title}" added successfully!`);
             if (responseData && responseData.length > 0) {
                 const created = { ...responseData[0], work_img: asList(responseData[0].work_img) };
                 setWorksData([...worksData, created]);
@@ -129,15 +151,16 @@ const WorksAdmin = () => {
         } finally {
             setLoading(false);
         }
-    }, [newWork, worksData, handleApiError]);
+    }, [newWork, worksData, handleApiError, readDesc]);
 
     const updateWork = useCallback(async () => {
-        if (!newWork.work_title || !newWork.work_desc || !newWork.work_category) {
+        const draft = { ...newWork, work_desc: readDesc() };
+        if (!draft.work_title || !editorText(draft.work_desc) || !draft.work_category) {
             setMessage("Title, description, and category are required.");
             return;
         }
 
-        if (!VALID_WORK_CATEGORIES.includes(newWork.work_category)) {
+        if (!VALID_WORK_CATEGORIES.includes(draft.work_category)) {
             setMessage("Invalid work category.");
             return;
         }
@@ -145,23 +168,22 @@ const WorksAdmin = () => {
         setLoading(true);
         try {
             const formData = new FormData();
-            Object.keys(newWork).forEach((key) => {
+            Object.keys(draft).forEach((key) => {
                 if (key === "work_img") {
-                    newWork.work_img.forEach((item) => {
+                    draft.work_img.forEach((item) => {
                         if (item instanceof File) {
                             formData.append("work_img", item);
                         }
                     });
-                    const existingWorkImageUrls = newWork.work_img.filter(item => typeof item === 'string');
-                    existingWorkImageUrls.forEach((url, index) => {
-                        formData.append(`work_img_url[${index}]`, url);
+                    draft.work_img.filter((item) => typeof item === 'string').forEach((url) => {
+                        formData.append("work_img_url", url);
                     });
                 } else if (key === "work_main_img" || key === "work_logo_img") {
-                    if (newWork[key] instanceof File) {
-                        formData.append(key, newWork[key]);
+                    if (draft[key] instanceof File) {
+                        formData.append(key, draft[key]);
                     }
-                } else if (newWork[key] !== null && newWork[key] !== undefined) {
-                    formData.append(key, newWork[key]);
+                } else if (draft[key] !== null && draft[key] !== undefined) {
+                    formData.append(key, draft[key]);
                 } else {
                     formData.append(key, "");
                 }
@@ -172,7 +194,7 @@ const WorksAdmin = () => {
                 body: formData,
             });
 
-            const responseData = await handleApiError(response, `Work "${newWork.work_title}" updated successfully!`);
+            const responseData = await handleApiError(response, `Work "${draft.work_title}" updated successfully!`);
             if (responseData && responseData.length > 0) {
                 const updated = { ...responseData[0], work_img: asList(responseData[0].work_img) };
                 const updatedWorksData = worksData.map((work) =>
@@ -187,7 +209,7 @@ const WorksAdmin = () => {
         } finally {
             setLoading(false);
         }
-    }, [newWork, worksData, selectedWork, handleApiError]);
+    }, [newWork, worksData, selectedWork, handleApiError, readDesc]);
 
     const deleteWork = useCallback(async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this Work?");
@@ -208,7 +230,7 @@ const WorksAdmin = () => {
 
     const handleMainImageChange = useCallback((e) => {
         const file = e.target.files[0];
-        setNewWork({ ...newWork, work_main_img: file });
+        setNewWork((current) => ({ ...current, work_main_img: file }));
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => setMainImagePreview(reader.result);
@@ -216,11 +238,11 @@ const WorksAdmin = () => {
         } else {
             setMainImagePreview(selectedWork?.work_main_img || null);
         }
-    }, [newWork, selectedWork]);
+    }, [selectedWork]);
 
     const handleLogoImageChange = useCallback((e) => {
         const file = e.target.files[0];
-        setNewWork({ ...newWork, work_logo_img: file });
+        setNewWork((current) => ({ ...current, work_logo_img: file }));
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => setLogoImagePreview(reader.result);
@@ -228,41 +250,46 @@ const WorksAdmin = () => {
         } else {
             setLogoImagePreview(selectedWork?.work_logo_img || null);
         }
-    }, [newWork, selectedWork]);
+    }, [selectedWork]);
 
     const handleWorkImageChange = useCallback((e, index) => {
         const file = e.target.files[0];
-        const updatedImages = [...newWork.work_img];
-        if (file) {
-            updatedImages[index] = file;
-        }
-        setNewWork({ ...newWork, work_img: updatedImages });
+        setNewWork((current) => {
+            const updatedImages = [...current.work_img];
+            if (file) updatedImages[index] = file;
+            return { ...current, work_img: updatedImages };
+        });
 
-        const updatedPreviews = [...workImagesPreview];
-        if (file) {
-            updatedPreviews[index] = URL.createObjectURL(file);
-        } else if (selectedWork?.work_img?.[index] && !newWork.work_img[index]) {
-            updatedPreviews[index] = selectedWork.work_img[index];
-        }
-        setWorkImagesPreview(updatedPreviews);
-    }, [newWork, workImagesPreview, selectedWork]);
+        setWorkImagesPreview((current) => {
+            const updatedPreviews = [...current];
+            if (file) {
+                updatedPreviews[index] = URL.createObjectURL(file);
+            } else if (selectedWork?.work_img?.[index]) {
+                updatedPreviews[index] = selectedWork.work_img[index];
+            }
+            return updatedPreviews;
+        });
+    }, [selectedWork]);
 
     const handleAddWorkImageInput = useCallback(() => {
-        setWorkImageInputs([...workImageInputs, workImageInputs.length]);
-        setNewWork({ ...newWork, work_img: [...newWork.work_img, null] });
-        setWorkImagesPreview([...workImagesPreview, null]);
-    }, [newWork, workImageInputs, workImagesPreview]);
+        setWorkImageInputs((current) => [...current, current.length]);
+        setNewWork((current) => ({ ...current, work_img: [...current.work_img, null] }));
+        setWorkImagesPreview((current) => [...current, null]);
+    }, []);
 
     const handleRemoveWorkImageInput = useCallback((index) => {
-        setWorkImageInputs(workImageInputs.filter((i) => i !== index));
-        const updatedImages = [...newWork.work_img];
-        updatedImages.splice(index, 1);
-        setNewWork({ ...newWork, work_img: updatedImages });
-
-        const updatedPreviews = [...workImagesPreview];
-        updatedPreviews.splice(index, 1);
-        setWorkImagesPreview(updatedPreviews);
-    }, [newWork, workImageInputs, workImagesPreview]);
+        setWorkImageInputs((current) => current.filter((_, itemIndex) => itemIndex !== index));
+        setNewWork((current) => {
+            const updatedImages = [...current.work_img];
+            updatedImages.splice(index, 1);
+            return { ...current, work_img: updatedImages };
+        });
+        setWorkImagesPreview((current) => {
+            const updatedPreviews = [...current];
+            updatedPreviews.splice(index, 1);
+            return updatedPreviews;
+        });
+    }, []);
 
     const handleUpload = useCallback(() => {
         resetForm();
@@ -340,10 +367,10 @@ const WorksAdmin = () => {
 
     const filteredWorksData = useMemo(() => {
         return worksData.filter(work =>
-            work.work_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            work.work_subtitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            work.work_desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            work.work_category.toLowerCase().includes(searchTerm.toLowerCase())
+            String(work.work_title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            String(work.work_subtitle || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            String(work.work_desc || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            String(work.work_category || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [searchTerm, worksData]);
 
@@ -378,7 +405,7 @@ const WorksAdmin = () => {
                         id="workTitle"
                         placeholder="Title"
                         value={newWork.work_title}
-                        onChange={(e) => setNewWork({ ...newWork, work_title: e.target.value })}
+                        onChange={(e) => setNewWork((current) => ({ ...current, work_title: e.target.value }))}
                         className={styles.inputField}
                     />
                     <label htmlFor="workSubtitle">Subtitle:</label>
@@ -387,24 +414,16 @@ const WorksAdmin = () => {
                         id="workSubtitle"
                         placeholder="Subtitle"
                         value={newWork.work_subtitle}
-                        onChange={(e) => setNewWork({ ...newWork, work_subtitle: e.target.value })}
+                        onChange={(e) => setNewWork((current) => ({ ...current, work_subtitle: e.target.value }))}
                         className={styles.inputField}
                     />
                     <label htmlFor="workDesc">Description:</label>
                     <ReactQuill
+                        ref={editorRef}
                         value={newWork.work_desc}
-                        onChange={(content) => setNewWork({ ...newWork, work_desc: content })}
-                        modules={{
-                            toolbar: [
-                                ['bold', 'italic', 'underline', 'strike'],
-                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                ['clean']
-                            ],
-                        }}
-                        formats={[
-                            'bold', 'italic', 'underline', 'strike',
-                            'list', 'bullet'
-                        ]}
+                        onChange={(content) => setNewWork((current) => ({ ...current, work_desc: content }))}
+                        modules={quillModules}
+                        formats={quillFormats}
                         className={styles.inputField}
                     />
                     <label htmlFor="workDetail">Detail:</label>
@@ -412,7 +431,7 @@ const WorksAdmin = () => {
                         id="workDetail"
                         placeholder="Detail"
                         value={newWork.work_detail}
-                        onChange={(e) => setNewWork({ ...newWork, work_detail: e.target.value })}
+                        onChange={(e) => setNewWork((current) => ({ ...current, work_detail: e.target.value }))}
                         className={styles.inputField}
                     />
                     <label htmlFor="workPeople">Brand Name:</label>
@@ -421,14 +440,14 @@ const WorksAdmin = () => {
                         id="workPeople"
                         placeholder="People"
                         value={newWork.work_people}
-                        onChange={(e) => setNewWork({ ...newWork, work_people: e.target.value })}
+                        onChange={(e) => setNewWork((current) => ({ ...current, work_people: e.target.value }))}
                         className={styles.inputField}
                     />
                     <label htmlFor="workCategory">Category:</label>
                     <select
                         id="workCategory"
                         value={newWork.work_category}
-                        onChange={(e) => setNewWork({ ...newWork, work_category: e.target.value })}
+                        onChange={(e) => setNewWork((current) => ({ ...current, work_category: e.target.value }))}
                         className={styles.inputField}
                     >
                         <option value="">Select Category</option>
@@ -532,7 +551,7 @@ const WorksAdmin = () => {
                                     id="workTitle"
                                     placeholder="Title"
                                     value={newWork.work_title}
-                                    onChange={(e) => setNewWork({ ...newWork, work_title: e.target.value })}
+                                    onChange={(e) => setNewWork((current) => ({ ...current, work_title: e.target.value }))}
                                     className={styles.inputField}
                                 />
                                 <label htmlFor="workSubtitle">Subtitle:</label>
@@ -541,24 +560,16 @@ const WorksAdmin = () => {
                                     id="workSubtitle"
                                     placeholder="Subtitle"
                                     value={newWork.work_subtitle}
-                                    onChange={(e) => setNewWork({ ...newWork, work_subtitle: e.target.value })}
+                                    onChange={(e) => setNewWork((current) => ({ ...current, work_subtitle: e.target.value }))}
                                     className={styles.inputField}
                                 />
                                 <label htmlFor="workDesc">Description:</label>
                                 <ReactQuill
+                                    ref={editorRef}
                                     value={newWork.work_desc}
-                                    onChange={(content) => setNewWork({ ...newWork, work_desc: content })}
-                                    modules={{
-                                        toolbar: [
-                                            ['bold', 'italic', 'underline', 'strike'],
-                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                            ['clean']
-                                        ],
-                                    }}
-                                    formats={[
-                                        'bold', 'italic', 'underline', 'strike',
-                                        'list', 'bullet'
-                                    ]}
+                                    onChange={(content) => setNewWork((current) => ({ ...current, work_desc: content }))}
+                                    modules={quillModules}
+                                    formats={quillFormats}
                                     className={styles.inputField}
                                 />
                                 <label htmlFor="workDetail">Detail:</label>
@@ -566,7 +577,7 @@ const WorksAdmin = () => {
                                     id="workDetail"
                                     placeholder="Detail"
                                     value={newWork.work_detail}
-                                    onChange={(e) => setNewWork({ ...newWork, work_detail: e.target.value })}
+                                    onChange={(e) => setNewWork((current) => ({ ...current, work_detail: e.target.value }))}
                                     className={styles.inputField}
                                 />
                                 <label htmlFor="workPeople">Brand Name:</label>
@@ -575,14 +586,14 @@ const WorksAdmin = () => {
                                     id="workPeople"
                                     placeholder="People"
                                     value={newWork.work_people}
-                                    onChange={(e) => setNewWork({ ...newWork, work_people: e.target.value })}
+                                    onChange={(e) => setNewWork((current) => ({ ...current, work_people: e.target.value }))}
                                     className={styles.inputField}
                                 />
                                 <label htmlFor="workCategory">Category:</label>
                                 <select
                                     id="workCategory"
                                     value={newWork.work_category}
-                                    onChange={(e) => setNewWork({ ...newWork, work_category: e.target.value })}
+                                    onChange={(e) => setNewWork((current) => ({ ...current, work_category: e.target.value }))}
                                     className={styles.inputField}
                                 >
                                     <option value="">Select Category</option>

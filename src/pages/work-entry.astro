@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import WorkBySlug from '../components/display/workbyslug.jsx';
+---
+
+<Layout title="Our Work">
+    <WorkBySlug client:only="react" />
+</Layout>
