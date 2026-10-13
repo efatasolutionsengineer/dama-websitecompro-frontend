@@ -318,9 +318,9 @@ const BlogsAdmin = () => {
             {showForm && editItemId === null && (
                 <form className={styles.workForm} onSubmit={(e) => e.preventDefault()}>
                     <label htmlFor="title">Title:</label>
-                    <input type="text" id="title" placeholder="Title" value={newBlog.title} onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })} className={styles.inputField} />
+                    <input type="text" id="title" placeholder="Title" value={newBlog.title} onChange={(e) => setNewBlog((current) => ({ ...current, title: e.target.value }))} className={styles.inputField} />
                     <label htmlFor="slug">Slug:</label>
-                    <input type="text" id="slug" placeholder="Slug" value={newBlog.slug} onChange={(e) => setNewBlog({ ...newBlog, slug: e.target.value })} className={styles.inputField} />
+                    <input type="text" id="slug" placeholder="Slug" value={newBlog.slug} onChange={(e) => setNewBlog((current) => ({ ...current, slug: e.target.value }))} className={styles.inputField} />
                     <label htmlFor="content">Content:</label>
                     <ReactQuill
                         ref={editorRef}
@@ -332,15 +332,15 @@ const BlogsAdmin = () => {
                         className={styles.inputField}
                     />
                     <label htmlFor="excerpt">Excerpt:</label>
-                    <textarea id="excerpt" placeholder="Excerpt" value={newBlog.excerpt} onChange={(e) => setNewBlog({ ...newBlog, excerpt: e.target.value })} className={styles.inputField} />
+                    <textarea id="excerpt" placeholder="Excerpt" value={newBlog.excerpt} onChange={(e) => setNewBlog((current) => ({ ...current, excerpt: e.target.value }))} className={styles.inputField} />
                     <label htmlFor="author_name">Author Name:</label>
-                    <input type="text" id="author_name" placeholder="Author Name" value={newBlog.author_name} onChange={(e) => setNewBlog({ ...newBlog, author_name: e.target.value })} className={styles.inputField} />
+                    <input type="text" id="author_name" placeholder="Author Name" value={newBlog.author_name} onChange={(e) => setNewBlog((current) => ({ ...current, author_name: e.target.value }))} className={styles.inputField} />
                     <label htmlFor="author_contact">Author Contact:</label>
-                    <input type="text" id="author_contact" placeholder="Author Contact" value={newBlog.author_contact} onChange={(e) => setNewBlog({ ...newBlog, author_contact: e.target.value })} className={styles.inputField} />
+                    <input type="text" id="author_contact" placeholder="Author Contact" value={newBlog.author_contact} onChange={(e) => setNewBlog((current) => ({ ...current, author_contact: e.target.value }))} className={styles.inputField} />
                     <label htmlFor="published_at">Published At:</label>
-                    <input type="datetime-local" id="published_at" value={newBlog.published_at} onChange={(e) => setNewBlog({ ...newBlog, published_at: e.target.value })} className={styles.inputField} />
+                    <input type="datetime-local" id="published_at" value={newBlog.published_at} onChange={(e) => setNewBlog((current) => ({ ...current, published_at: e.target.value }))} className={styles.inputField} />
                     <label htmlFor="is_pinned">Is Pinned:</label>
-                    <select id="is_pinned" value={newBlog.is_pinned} onChange={(e) => setNewBlog({ ...newBlog, is_pinned: e.target.value === "true" })} className={styles.inputField}>
+                    <select id="is_pinned" value={newBlog.is_pinned} onChange={(e) => setNewBlog((current) => ({ ...current, is_pinned: e.target.value === "true" }))} className={styles.inputField}>
                         <option value="true">True</option>
                         <option value="false">False</option>
                     </select>
@@ -382,9 +382,9 @@ const BlogsAdmin = () => {
                         {editItemId === blog.id && showForm && (
                             <form className={styles.workForm} onSubmit={(e) => e.preventDefault()}>
                                 <label htmlFor="title">Title:</label>
-                                <input type="text" id="title" placeholder="Title" value={newBlog.title} onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })} className={styles.inputField} />
+                                <input type="text" id="title" placeholder="Title" value={newBlog.title} onChange={(e) => setNewBlog((current) => ({ ...current, title: e.target.value }))} className={styles.inputField} />
                                 <label htmlFor="slug">Slug:</label>
-                                <input type="text" id="slug" placeholder="Slug" value={newBlog.slug} onChange={(e) => setNewBlog({ ...newBlog, slug: e.target.value })} className={styles.inputField} />
+                                <input type="text" id="slug" placeholder="Slug" value={newBlog.slug} onChange={(e) => setNewBlog((current) => ({ ...current, slug: e.target.value }))} className={styles.inputField} />
                                 <label htmlFor="content">Content:</label>
                                 <ReactQuill
                                     ref={editorRef}
@@ -396,15 +396,15 @@ const BlogsAdmin = () => {
                                     className={styles.inputField}
                                 />
                                 <label htmlFor="excerpt">Excerpt:</label>
-                                <textarea id="excerpt" placeholder="Excerpt" value={newBlog.excerpt} onChange={(e) => setNewBlog({ ...newBlog, excerpt: e.target.value })} className={styles.inputField} />
+                                <textarea id="excerpt" placeholder="Excerpt" value={newBlog.excerpt} onChange={(e) => setNewBlog((current) => ({ ...current, excerpt: e.target.value }))} className={styles.inputField} />
                                 <label htmlFor="author_name">Author Name:</label>
-                                <input type="text" id="author_name" placeholder="Author Name" value={newBlog.author_name} onChange={(e) => setNewBlog({ ...newBlog, author_name: e.target.value })} className={styles.inputField} />
+                                <input type="text" id="author_name" placeholder="Author Name" value={newBlog.author_name} onChange={(e) => setNewBlog((current) => ({ ...current, author_name: e.target.value }))} className={styles.inputField} />
                                 <label htmlFor="author_contact">Author Contact:</label>
-                                <input type="text" id="author_contact" placeholder="Author Contact" value={newBlog.author_contact} onChange={(e) => setNewBlog({ ...newBlog, author_contact: e.target.value })} className={styles.inputField} />
+                                <input type="text" id="author_contact" placeholder="Author Contact" value={newBlog.author_contact} onChange={(e) => setNewBlog((current) => ({ ...current, author_contact: e.target.value }))} className={styles.inputField} />
                                 <label htmlFor="published_at">Published At:</label>
-                                <input type="datetime-local" id="published_at" value={newBlog.published_at} onChange={(e) => setNewBlog({ ...newBlog, published_at: e.target.value })} className={styles.inputField} />
+                                <input type="datetime-local" id="published_at" value={newBlog.published_at} onChange={(e) => setNewBlog((current) => ({ ...current, published_at: e.target.value }))} className={styles.inputField} />
                                 <label htmlFor="is_pinned">Is Pinned:</label>
-                                <select id="is_pinned" value={newBlog.is_pinned} onChange={(e) => setNewBlog({ ...newBlog, is_pinned: e.target.value === "true" })} className={styles.inputField}>
+                                <select id="is_pinned" value={newBlog.is_pinned} onChange={(e) => setNewBlog((current) => ({ ...current, is_pinned: e.target.value === "true" }))} className={styles.inputField}>
                                     <option value="true">True</option>
                                     <option value="false">False</option>
                                 </select>

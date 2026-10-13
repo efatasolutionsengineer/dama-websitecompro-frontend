@@ -1,15 +1,21 @@
 import { API_BASE } from '../../lib/apiBase.js';
+import { asList } from '../../lib/asList.js';
 import React, { useState, useEffect } from 'react';
 import styles from './blogdetailcontent.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
+function withImages(entry) {
+  if (!entry) return null;
+  return { ...entry, image_list: asList(entry.image_list) };
+}
+
 const BlogDetailContent = ({ blog }) => {
-  const [blogData, setBlogData] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [blogData, setBlogData] = useState(() => withImages(blog));
+  const [loading, setLoading] = useState(!blog);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(Boolean(blog));
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -17,13 +23,14 @@ const BlogDetailContent = ({ blog }) => {
         const response = await fetch(`${API_BASE}/blogs/${blog.id}`);
         if (response.ok) {
           const data = await response.json();
-          setBlogData(data);
+          setBlogData(withImages(data));
           setIsLoaded(true);
         }
       } catch (error) {
         console.error('Error fetching blog data:', error);
       } finally {
         setLoading(false);
+        setIsLoaded(true);
       }
     };
 
@@ -71,9 +78,9 @@ const BlogDetailContent = ({ blog }) => {
           <img src={blogData.cover_image} alt={blogData.title} className={styles.coverImage} onClick={() => handleImageClick(blogData.cover_image)} />
         )}
         <div className={styles.blogContent} dangerouslySetInnerHTML={{ __html: blogData.content }} />
-        {blogData.image_list && blogData.image_list.length > 0 && (
+        {asList(blogData.image_list).length > 0 && (
           <div className={styles.imageList}>
-            {blogData.image_list.map((image, index) => (
+            {asList(blogData.image_list).map((image, index) => (
               <div key={index} className={styles.imageItemWrapper}>
                 <img src={image} alt={`Image ${index + 1}`} className={styles.imageItem} onClick={() => handleImageClick(image)} />
               </div>

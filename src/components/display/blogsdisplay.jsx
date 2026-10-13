@@ -28,12 +28,10 @@ const BlogsDisplay = () => {
     fetchBlogsData();
   }, []);
 
-  const filteredBlogs = blogsData.filter(
-    (blog) =>
-      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.author_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBlogs = blogsData.filter((blog) =>
+    [blog.title, blog.slug, blog.content, blog.author_name].some((value) =>
+      String(value || '').toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   const pinnedBlogs = filteredBlogs.filter((blog) => blog.is_pinned);
@@ -80,7 +78,7 @@ const BlogsDisplay = () => {
             <h2 className={styles.sectionTitle}>Pinned Blogs</h2>
             {sortedPinnedBlogs.map((blog) => (
               <div key={blog.id} className={styles.blogItem}>
-                <a href={`/blogs/${slugify(blog.slug || blog.title)}`}>
+                <a href={`/blogs/${slugify(blog.slug || blog.title)}/`}>
                   <div className={styles.blogContent}>
                     <h3 className={styles.blogTitle}>{blog.title}</h3>
                     <p className={styles.excerpt}>{blog.excerpt}</p>
@@ -107,7 +105,7 @@ const BlogsDisplay = () => {
           {sortedUnpinnedBlogs.length > 0 && <h2 className={styles.sectionTitle}>Blogs</h2>}
           {sortedUnpinnedBlogs.map((blog) => (
             <div key={blog.id} className={styles.blogItem}>
-              <a href={`/blogs/${slugify(blog.slug || blog.title)}`}>
+              <a href={`/blogs/${slugify(blog.slug || blog.title)}/`}>
                 <div className={styles.blogContent}>
                   <h3 className={styles.blogTitle}>{blog.title}</h3>
                   <p className={styles.excerpt}>{blog.excerpt}</p>

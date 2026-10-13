@@ -8,7 +8,10 @@ export default function BlogBySlug() {
     const [status, setStatus] = useState('loading');
 
     useEffect(() => {
-        const slug = window.location.pathname.replace(/\/+$/, '').split('/').filter(Boolean).pop();
+        const segment = window.location.pathname.replace(/\/+$/, '').split('/').filter(Boolean).pop() || '';
+        let decoded = segment;
+        try { decoded = decodeURIComponent(segment); } catch { decoded = segment; }
+        const slug = slugify(decoded);
         fetch(`${API_BASE}/blogs`)
             .then((response) => response.json())
             .then((blogs) => {

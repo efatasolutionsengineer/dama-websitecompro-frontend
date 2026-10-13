@@ -131,9 +131,7 @@
   }
 
   .blogItem {
-    display: grid;
-    grid-template-columns: 70% 30%; 
-    gap: 16px;
+    display: block;
     margin-bottom: 30px;
     padding: 0 16px;
     padding-bottom: 20px;
@@ -141,7 +139,10 @@
   }
 
   .blogItem a {
-    display: contents;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 16px;
+    width: 100%;
   }
 
   .coverImage {
