@@ -19,6 +19,12 @@ function editorText(html) {
     return String(html || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
 }
 
+function createdStamp(blog) {
+    const created = Date.parse(blog.created_at || '');
+    if (!Number.isNaN(created)) return created;
+    return Number(blog.id) || 0;
+}
+
 const BlogsAdmin = () => {
     const [blogsData, setBlogsData] = useState([]);
     const [newBlog, setNewBlog] = useState({
@@ -299,10 +305,12 @@ const BlogsAdmin = () => {
 
     const filteredBlogsData = useMemo(() => {
         const query = searchTerm.toLowerCase();
-        return blogsData.filter((blog) =>
-            [blog.title, blog.slug, blog.content, blog.author_name]
-                .some((value) => String(value || '').toLowerCase().includes(query))
-        );
+        return blogsData
+            .filter((blog) =>
+                [blog.title, blog.slug, blog.content, blog.author_name]
+                    .some((value) => String(value || '').toLowerCase().includes(query))
+            )
+            .sort((a, b) => createdStamp(b) - createdStamp(a));
     }, [searchTerm, blogsData]);
 
     return (
