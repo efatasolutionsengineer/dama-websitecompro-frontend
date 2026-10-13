@@ -1,8 +1,23 @@
 import { API_BASE } from '../lib/apiBase.js';
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { slugify } from '../lib/slugify.js';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import styles from "./worksadmin.module.css";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+
+const quillModules = {
+    toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean'],
+    ],
+};
+
+const quillFormats = ['bold', 'italic', 'underline', 'strike', 'list'];
+
+function editorText(html) {
+    return String(html || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+}
 
 const BlogsAdmin = () => {
     const [blogsData, setBlogsData] = useState([]);
@@ -29,6 +44,13 @@ const BlogsAdmin = () => {
     const [imageInputs, setImageInputs] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [editItemId, setEditItemId] = useState(null);
+    const editorRef = useRef(null);
+
+    const readContent = useCallback(() => {
+        const live = editorRef.current?.getEditor?.()?.root?.innerHTML || '';
+        if (editorText(live)) return live;
+        return newBlog.content;
+    }, [newBlog.content]);
 
     const fetchBlogsData = useCallback(async () => {
         setLoading(true);
@@ -57,27 +79,35 @@ const BlogsAdmin = () => {
     }, []);
 
     const addBlog = useCallback(async () => {
-        if (!newBlog.title || !newBlog.content) {
+        const content = readContent();
+        const title = newBlog.title.trim();
+        if (!title || !editorText(content)) {
             setMessage("Title and content are required.");
             return;
         }
 
         setLoading(true);
         try {
+            const blogToSave = {
+                ...newBlog,
+                title,
+                content,
+                slug: newBlog.slug.trim() || slugify(title),
+            };
             const formData = new FormData();
-            Object.keys(newBlog).forEach((key) => {
+            Object.keys(blogToSave).forEach((key) => {
                 if (key === "image_list") {
-                    newBlog.image_list.forEach((file) => {
+                    blogToSave.image_list.forEach((file) => {
                         if (file) {
                             formData.append("image_list", file);
                         }
                     });
-                } else if (key === "published_at" && !newBlog.published_at) {
+                } else if (key === "published_at" && !blogToSave.published_at) {
                     return;
-                } else if (newBlog[key] !== null && newBlog[key] !== undefined) {
-                    formData.append(key, newBlog[key]);
-                } else {
-                    formData.append(key, "");
+                } else if (key === "cover_image" && !(blogToSave.cover_image instanceof File)) {
+                    return;
+                } else if (blogToSave[key] !== null && blogToSave[key] !== undefined) {
+                    formData.append(key, blogToSave[key]);
                 }
             });
 
@@ -87,41 +117,48 @@ const BlogsAdmin = () => {
             });
 
             await handleApiError(response, "Blog added successfully!");
-            const data = await response.json();
-            setBlogsData([...blogsData, data[0]]);
             resetForm();
+            await fetchBlogsData();
         } catch (error) {
             console.error("Error adding Blog:", error);
             setMessage(`Failed to add Blog: ${error.message}`);
         } finally {
             setLoading(false);
         }
-    }, [newBlog, blogsData, handleApiError]);
+    }, [newBlog, handleApiError, readContent, fetchBlogsData]);
 
     const updateBlog = useCallback(async () => {
-        if (!newBlog.title || !newBlog.content) {
+        const content = readContent();
+        const title = newBlog.title.trim();
+        if (!title || !editorText(content)) {
             setMessage("Title and content are required.");
             return;
         }
 
         setLoading(true);
         try {
+            const blogToSave = {
+                ...newBlog,
+                title,
+                content,
+                slug: newBlog.slug.trim() || slugify(title),
+            };
             const formData = new FormData();
-            Object.keys(newBlog).forEach((key) => {
+            Object.keys(blogToSave).forEach((key) => {
                 if (key === "image_list") {
-                    newBlog.image_list.forEach((item) => {
+                    blogToSave.image_list.forEach((item) => {
                         if (item instanceof File) {
                             formData.append("image_list", item);
                         } else if (typeof item === 'string') {
                             formData.append("image_list_url", item);
                         }
                     });
-                } else if (key === "published_at" && !newBlog.published_at) {
+                } else if (key === "published_at" && !blogToSave.published_at) {
                     return;
-                } else if (newBlog[key] !== null && newBlog[key] !== undefined) {
-                    formData.append(key, newBlog[key]);
-                } else {
-                    formData.append(key, "");
+                } else if (key === "cover_image" && !(blogToSave.cover_image instanceof File)) {
+                    return;
+                } else if (blogToSave[key] !== null && blogToSave[key] !== undefined) {
+                    formData.append(key, blogToSave[key]);
                 }
             });
 
@@ -131,19 +168,15 @@ const BlogsAdmin = () => {
             });
 
             await handleApiError(response, "Blog updated successfully!");
-            const updatedData = await response.json();
-            const updatedBlogsData = blogsData.map((blog) =>
-                blog.id === updatedData[0].id ? updatedData[0] : blog
-            );
-            setBlogsData(updatedBlogsData);
             resetForm();
+            await fetchBlogsData();
         } catch (error) {
             console.error("Error updating Blog:", error);
             setMessage(`Failed to update Blog: ${error.message}`);
         } finally {
             setLoading(false);
         }
-    }, [newBlog, blogsData, selectedBlog, handleApiError]);
+    }, [newBlog, selectedBlog, handleApiError, readContent, fetchBlogsData]);
 
     const deleteBlog = useCallback(async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this Blog?");
@@ -164,7 +197,7 @@ const BlogsAdmin = () => {
 
     const handleCoverImageChange = useCallback((e) => {
         const file = e.target.files[0];
-        setNewBlog({ ...newBlog, cover_image: file });
+        setNewBlog((current) => ({ ...current, cover_image: file || null }));
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => setCoverImagePreview(reader.result);
@@ -172,35 +205,42 @@ const BlogsAdmin = () => {
         } else {
             setCoverImagePreview(selectedBlog?.cover_image || null);
         }
-    }, [newBlog, selectedBlog]);
+    }, [selectedBlog]);
 
     const handleImageListChange = useCallback((e, index) => {
         const file = e.target.files[0];
-        const updatedImages = [...newBlog.image_list];
-        updatedImages[index] = file;
-        setNewBlog({ ...newBlog, image_list: updatedImages });
-
-        const updatedPreviews = [...imageListPreviews];
-        updatedPreviews[index] = URL.createObjectURL(file);
-        setImageListPreviews(updatedPreviews);
-    }, [newBlog, imageListPreviews]);
+        if (!file) return;
+        setNewBlog((current) => {
+            const updatedImages = [...current.image_list];
+            updatedImages[index] = file;
+            return { ...current, image_list: updatedImages };
+        });
+        setImageListPreviews((current) => {
+            const updatedPreviews = [...current];
+            updatedPreviews[index] = URL.createObjectURL(file);
+            return updatedPreviews;
+        });
+    }, []);
 
     const handleAddImageInput = useCallback(() => {
-        setImageInputs([...imageInputs, imageInputs.length]);
-        setNewBlog({ ...newBlog, image_list: [...newBlog.image_list, null] });
-        setImageListPreviews([...imageListPreviews, null]);
-    }, [newBlog, imageInputs, imageListPreviews]);
+        setImageInputs((current) => [...current, current.length]);
+        setNewBlog((current) => ({ ...current, image_list: [...current.image_list, null] }));
+        setImageListPreviews((current) => [...current, null]);
+    }, []);
 
     const handleRemoveImageInput = useCallback((index) => {
-        setImageInputs(imageInputs.filter((i) => i !== index));
-        const updatedImages = [...newBlog.image_list];
-        updatedImages.splice(index, 1);
-        setNewBlog({ ...newBlog, image_list: updatedImages });
-
-        const updatedPreviews = [...imageListPreviews];
-        updatedPreviews.splice(index, 1);
-        setImageListPreviews(updatedPreviews);
-    }, [newBlog, imageInputs, imageListPreviews]);
+        setImageInputs((current) => current.filter((item) => item !== index));
+        setNewBlog((current) => {
+            const updatedImages = [...current.image_list];
+            updatedImages.splice(index, 1);
+            return { ...current, image_list: updatedImages };
+        });
+        setImageListPreviews((current) => {
+            const updatedPreviews = [...current];
+            updatedPreviews.splice(index, 1);
+            return updatedPreviews;
+        });
+    }, []);
 
     const handleUpload = useCallback(() => {
         resetForm();
@@ -258,12 +298,10 @@ const BlogsAdmin = () => {
     }, [fetchBlogsData]);
 
     const filteredBlogsData = useMemo(() => {
-        return blogsData.filter(
-            (blog) =>
-                blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                blog.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                blog.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                blog.author_name.toLowerCase().includes(searchTerm.toLowerCase())
+        const query = searchTerm.toLowerCase();
+        return blogsData.filter((blog) =>
+            [blog.title, blog.slug, blog.content, blog.author_name]
+                .some((value) => String(value || '').toLowerCase().includes(query))
         );
     }, [searchTerm, blogsData]);
 
@@ -285,20 +323,12 @@ const BlogsAdmin = () => {
                     <input type="text" id="slug" placeholder="Slug" value={newBlog.slug} onChange={(e) => setNewBlog({ ...newBlog, slug: e.target.value })} className={styles.inputField} />
                     <label htmlFor="content">Content:</label>
                     <ReactQuill
+                        ref={editorRef}
                         id="content"
                         value={newBlog.content}
-                        onChange={(content) => setNewBlog({ ...newBlog, content: content })}
-                        modules={{
-                            toolbar: [
-                                ['bold', 'italic', 'underline', 'strike'],
-                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                ['clean']
-                            ],
-                        }}
-                        formats={[
-                            'bold', 'italic', 'underline', 'strike',
-                            'list', 'bullet'
-                        ]}
+                        onChange={(content) => setNewBlog((current) => ({ ...current, content }))}
+                        modules={quillModules}
+                        formats={quillFormats}
                         className={styles.inputField}
                     />
                     <label htmlFor="excerpt">Excerpt:</label>
@@ -357,20 +387,12 @@ const BlogsAdmin = () => {
                                 <input type="text" id="slug" placeholder="Slug" value={newBlog.slug} onChange={(e) => setNewBlog({ ...newBlog, slug: e.target.value })} className={styles.inputField} />
                                 <label htmlFor="content">Content:</label>
                                 <ReactQuill
+                                    ref={editorRef}
                                     id="content"
                                     value={newBlog.content}
-                                    onChange={(content) => setNewBlog({ ...newBlog, content: content })}
-                                    modules={{
-                                        toolbar: [
-                                            ['bold', 'italic', 'underline', 'strike'],
-                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                            ['clean']
-                                        ],
-                                    }}
-                                    formats={[
-                                        'bold', 'italic', 'underline', 'strike',
-                                        'list', 'bullet'
-                                    ]}
+                                    onChange={(content) => setNewBlog((current) => ({ ...current, content }))}
+                                    modules={quillModules}
+                                    formats={quillFormats}
                                     className={styles.inputField}
                                 />
                                 <label htmlFor="excerpt">Excerpt:</label>
